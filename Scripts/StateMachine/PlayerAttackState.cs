@@ -4,12 +4,9 @@ using UnityEngine;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    private float _elapsedTime;
-    private bool _attackEnded;
-
     IEnumerator IAttackResetRoutine()
     {
-        yield return new WaitForSeconds(0.85f);
+        yield return new WaitForSeconds(1f);
         Ctx.AttackCount = 0;
     }
 
@@ -17,12 +14,10 @@ public class PlayerAttackState : PlayerBaseState
     : base (currentContext, playerStateFactory) {}
 
     public override void EnterState() {
-        _elapsedTime = 0;
         HandleAttack();
     }
 
     public override void UpdateState() {
-        _elapsedTime += Time.deltaTime;
         CheckSwitchStates();
     }
 
@@ -48,9 +43,9 @@ public class PlayerAttackState : PlayerBaseState
 
     void HandleAttack()
     {
-        if (Ctx.AttackCount < 2 && Ctx.CurrentAttackResetRoutine != null)
+        if (Ctx.JumpCount < 2 && Ctx.CurrentJumpResetRoutine != null)
         {
-            Ctx.StopCoroutine(Ctx.CurrentAttackResetRoutine);
+            Ctx.StopCoroutine(Ctx.CurrentJumpResetRoutine);
         }
 
         // variable accessed by animation events

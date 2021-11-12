@@ -23,12 +23,12 @@ public class PlayerIdleState : PlayerBaseState
     public override void InitializaSubState() {}
 
     public override void CheckSwitchStates() {
-        if (Ctx.IsMovementPressed && Ctx.IsRunPressed) {
+        if (Ctx.IsAttackPressed || Ctx.IsAttacking) {
+            SwitchState(Factory.Attack());
+        } else if (Ctx.IsMovementPressed && Ctx.IsRunPressed) {
             SwitchState(Factory.Run());
         } else if (Ctx.IsMovementPressed) {
             SwitchState(Factory.Walk());
-        } else if (Ctx.IsAttackPressed) {
-            SwitchState(Factory.Attack());
         }
     }
 }
