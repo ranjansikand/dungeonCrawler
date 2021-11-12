@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ee3eb33d775f5f24ea3b9e6aeb582ae6, type: 3}
+  m_Name: Other Equipment
+  m_EditorClassIdentifier: 
+  name: Other Chestplate
+  prefab: {fileID: 8656793370891987596, guid: 8a918d1c196ccab4b82d7fb3e9dd991b, type: 3}
+  icon: {fileID: 21300000, guid: ea249ef560ab4d04592b3157cac7c086, type: 3}
+  basePosition: {x: 0, y: 1, z: 0}
+  type: 1
