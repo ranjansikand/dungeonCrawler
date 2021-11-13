@@ -36,4 +36,9 @@ public class PlayerStateFactory
     {
         return new PlayerAttackState(_context, this);
     }
+
+    public PlayerBaseState Standard()
+    {
+        return new PlayerStandardState(_context, this);
+    }
 }

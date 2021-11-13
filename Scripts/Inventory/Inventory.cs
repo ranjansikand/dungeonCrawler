@@ -32,8 +32,8 @@ public class Inventory : MonoBehaviour
     public int space = 20;
 
     [Header("---Equipment Inventory---")]
-    [SerializeField] Equipment bubbleSlot;
-    [SerializeField] Equipment amulet, chest, rune, boots;
+    Equipment bubbleSlot;
+    Equipment amulet, chest, rune, boots;
     public Equipment[] equipped = new Equipment[4];
 
     bool inventoryEnabled;

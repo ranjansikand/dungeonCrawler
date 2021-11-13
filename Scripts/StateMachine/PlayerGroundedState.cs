@@ -7,7 +7,7 @@ public class PlayerGroundedState : PlayerBaseState
     public PlayerGroundedState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory)
     : base (currentContext, playerStateFactory) {
         IsRootState = true;
-        InitializaSubState();
+        InitializeSubState();
     }
 
     public override void EnterState() {
@@ -21,15 +21,13 @@ public class PlayerGroundedState : PlayerBaseState
 
     public override void ExitState() {}
 
-    public override void InitializaSubState() {
+    public override void InitializeSubState() {
         if (!Ctx.IsMovementPressed && !Ctx.IsRunPressed) {
             SetSubState(Factory.Idle());
         } else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed) {
             SetSubState(Factory.Walk());
-        } else if (Ctx.IsMovementPressed && Ctx.IsRunPressed) {
-            SetSubState(Factory.Run());
         } else {
-            SetSubState(Factory.Attack());
+            SetSubState(Factory.Run());
         }
     }
 

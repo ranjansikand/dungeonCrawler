@@ -5,7 +5,9 @@ using UnityEngine;
 public class PlayerIdleState : PlayerBaseState
 {
     public PlayerIdleState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
-    : base (currentContext, playerStateFactory) {}
+    : base (currentContext, playerStateFactory) {
+        InitializeSubState();
+    }
 
     public override void EnterState() {
         Ctx.Animator.SetBool(Ctx.IsWalkingHash, false);
@@ -20,12 +22,16 @@ public class PlayerIdleState : PlayerBaseState
 
     public override void ExitState() {}
 
-    public override void InitializaSubState() {}
+    public override void InitializeSubState() {
+        if (Ctx.IsAttackPressed || Ctx.IsAttacking) {
+            SetSubState(Factory.Attack());
+        } else {
+            SetSubState(Factory.Standard());
+        }
+    }
 
     public override void CheckSwitchStates() {
-        if (Ctx.IsAttackPressed || Ctx.IsAttacking) {
-            SwitchState(Factory.Attack());
-        } else if (Ctx.IsMovementPressed && Ctx.IsRunPressed) {
+        if (Ctx.IsMovementPressed && Ctx.IsRunPressed) {
             SwitchState(Factory.Run());
         } else if (Ctx.IsMovementPressed) {
             SwitchState(Factory.Walk());
