@@ -52,6 +52,14 @@ public class PlayerStateMachine : MonoBehaviour
     int _attackCount = 0;
     Coroutine _currentAttackResetRoutine = null;
 
+    // dodge variables
+    bool _isDodgePressed = false;
+    bool _isDodging = false;
+    int _dodgingHash;
+
+    // death
+    bool isDead;
+
     // state variables
     PlayerBaseState _currentState;
     PlayerStateFactory _states;
@@ -71,6 +79,7 @@ public class PlayerStateMachine : MonoBehaviour
     public int AttackingHash { get { return _attackingHash; }}
     public int AttackCount { get { return _attackCount; } set { _attackCount = value; }}
     public int AttackCountHash { get { return _attackCountHash; }}
+    public int IsDodgingHash { get { return _dodgingHash; }}
     public bool IsMovementPressed { get { return _isMovementPressed; }}
     public bool IsRunPressed { get { return _isRunPressed; }}
     public bool RequireNewJumpPress { get { return _requireNewJumpPress; } set { _requireNewJumpPress = value; }}
@@ -79,6 +88,9 @@ public class PlayerStateMachine : MonoBehaviour
     public bool IsGrounded { get { return _isGrounded; } set { _isGrounded = value; }}
     public bool IsAttackPressed { get { return _isAttackPressed; } set { _isAttackPressed = value; }}
     public bool IsAttacking { get { return _isAttacking; } set { _isAttacking = value; }}
+    public bool IsDodgePressed { get { return _isDodgePressed; } set { _isDodgePressed = value; }}
+    public bool IsDodging { get { return _isDodging; } set { _isDodging = value; }}
+    public bool IsDead { get {return isDead;} set {isDead = value; }}
     public float GroundedGravity { get { return _groundedGravity; }}
     public float CurrentMovementY { get { return _currentMovement.y; } set { _currentMovement.y = value; }}
     public float AppliedMovementX { get { return _appliedMovement.x; } set { _appliedMovement.x = value; }}
@@ -104,6 +116,7 @@ public class PlayerStateMachine : MonoBehaviour
         _jumpCountHash = Animator.StringToHash("jumpCount");
         _attackingHash = Animator.StringToHash("attacking");
         _attackCountHash = Animator.StringToHash("attackCount");
+        _dodgingHash = Animator.StringToHash("isDodging");
 
         _playerInput.CharacterControls.Move.started += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
@@ -115,6 +128,8 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.CharacterControls.Menu.performed += OnMenu;
         _playerInput.CharacterControls.Attack.started += OnAttack;
         _playerInput.CharacterControls.Attack.canceled += OnAttack;
+        _playerInput.CharacterControls.Dodge.started += OnDodge;
+        _playerInput.CharacterControls.Dodge.canceled += OnDodge;
 
         SetupJumpVariables();
         StartCoroutine("CheckForGround");
@@ -155,9 +170,12 @@ public class PlayerStateMachine : MonoBehaviour
 
     void Update()
     {
-        HandleRotation();
-        _currentState.UpdateStates();
-        _characterController.Move(_appliedMovement * Time.deltaTime);
+        if (!isDead)
+        {
+            HandleRotation();
+            _currentState.UpdateStates();
+            _characterController.Move(_appliedMovement * Time.deltaTime);
+        }
     }
 
     void HandleRotation()
@@ -175,6 +193,11 @@ public class PlayerStateMachine : MonoBehaviour
     void ResetAttack()
     {
         _isAttacking = false;
+    }
+
+    void ResetDodge()
+    {
+        _isDodging = false;
     }
 
     void OnMovementInput(InputAction.CallbackContext context)
@@ -202,6 +225,11 @@ public class PlayerStateMachine : MonoBehaviour
     void OnAttack(InputAction.CallbackContext context)
     {
         _isAttackPressed = context.ReadValueAsButton();
+    }
+
+    void OnDodge(InputAction.CallbackContext context)
+    {
+        _isDodgePressed = context.ReadValueAsButton();
     }
 
     void OnEnable()

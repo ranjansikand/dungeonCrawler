@@ -76,19 +76,15 @@ public class Inventory : MonoBehaviour
         switch (equipment.type) {
             case EquipmentType.amulet:
                 ReplaceEquipment(equipment, 0);
-                Debug.Log("Now equipped: " + equipped[0]);
                 break;
             case EquipmentType.chest:
                 ReplaceEquipment(equipment, 1);
-                Debug.Log("Now equipped: " + equipped[0]);
                 break;
             case EquipmentType.rune:
                 ReplaceEquipment(equipment, 2);
-                Debug.Log("Now equipped: " + equipped[0]);
                 break;
             case EquipmentType.boots:
                 ReplaceEquipment(equipment, 3);
-                Debug.Log("Now equipped: " + equipped[0]);
                 break;
             default:
                 Debug.Log("Could not equip " + equipment);
@@ -132,5 +128,14 @@ public class Inventory : MonoBehaviour
                 break;
         }
         if (onEquipmentChangedCallback != null) onEquipmentChangedCallback.Invoke();
+    }
+
+    public int RunicAttack()
+    {
+        if (equipped[2] != null) {
+            return equipped[2].animation;
+        } else {
+            return 0;
+        }
     }
 }

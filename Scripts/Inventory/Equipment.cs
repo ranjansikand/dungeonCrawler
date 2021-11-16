@@ -5,6 +5,8 @@ public class Equipment : Item
 {
     public EquipmentType type;
 
+    public int animation;
+
     public override void Use()
     {
         base.Use();

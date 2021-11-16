@@ -22,6 +22,8 @@ public class PlayerStandardState : PlayerBaseState
     public override void CheckSwitchStates() {
         if (Ctx.IsAttackPressed) {
             SwitchState(Factory.Attack());
+        } else if (Ctx.IsDodgePressed) {
+            SwitchState(Factory.Dodge());
         }
     }
 }

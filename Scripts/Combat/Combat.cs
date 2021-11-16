@@ -1,6 +1,7 @@
+using System.Collections;
 using UnityEngine;
 
-public class Combat : MonoBehaviour
+public class Combat : MonoBehaviour, IDamagable
 {
     [SerializeField] Collider weaponHitbox;
     [SerializeField] CharacterController controller;
@@ -8,6 +9,28 @@ public class Combat : MonoBehaviour
     [SerializeField] int explosiondmg = 1;
     [SerializeField] Transform _tipOfWeapon;
     [SerializeField] float explosionRadius = 1.5f;
+
+    [SerializeField] int maxHealth = 10;
+    int health;
+    PlayerStateMachine player;
+    bool invulnerable = false;
+
+    void Awake()
+    {
+        player = GetComponent<PlayerStateMachine>();
+        health = maxHealth;
+
+        StartCoroutine("CheckForDeath");
+    }
+
+    IEnumerator CheckForDeath()
+    {
+        while (!player.IsDead)
+        {
+            if (health <= 0) Die();
+            yield return new WaitForSeconds(.1f);
+        }
+    }
 
     public void ToggleHitbox()
     {
@@ -33,5 +56,25 @@ public class Combat : MonoBehaviour
             }
         }
         
+    }
+
+    public void ToggleInvulnerable()
+    {
+        // call from the dodge to disable and enable hitbox
+        invulnerable = !invulnerable;
+    }
+
+    public void Damage(int damage)
+    {
+        if (!invulnerable) health -= damage;
+
+        Debug.Log(health);
+    }
+
+    void Die()
+    {
+        StopCoroutine("CheckForDeath");
+        player.IsDead = true;
+        player.Animator.SetTrigger("Die");
     }
 }

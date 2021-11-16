@@ -41,4 +41,9 @@ public class PlayerStateFactory
     {
         return new PlayerStandardState(_context, this);
     }
+
+    public PlayerBaseState Dodge()
+    {
+        return new PlayerDodgeState(_context, this);
+    }
 }

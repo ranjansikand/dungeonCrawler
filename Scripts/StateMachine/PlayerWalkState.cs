@@ -25,6 +25,8 @@ public class PlayerWalkState : PlayerBaseState
     public override void InitializeSubState() {
         if (Ctx.IsAttackPressed || Ctx.IsAttacking) {
             SetSubState(Factory.Attack());
+        } else if (Ctx.IsDodgePressed || Ctx.IsDodging) {
+            SetSubState(Factory.Dodge());
         } else {
             SetSubState(Factory.Standard());
         }

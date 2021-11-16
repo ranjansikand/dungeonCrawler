@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerAttackState : PlayerBaseState
 {
-    Transform target;
+    float timeElapsed;
 
     IEnumerator IAttackResetRoutine()
     {
@@ -18,16 +18,11 @@ public class PlayerAttackState : PlayerBaseState
     }
 
     public override void EnterState() {
-        // HandleMotion();
         HandleAttack();
     }
 
     public override void UpdateState() {
-        RaycastHit hit;
-
-        if (Physics.SphereCast(Ctx.gameObject.transform.position, 2, Ctx.gameObject.transform.forward, out hit, 3, 1 << 15)) {
-            Ctx.gameObject.transform.LookAt(hit.collider.gameObject.transform.position);
-        }
+        HandleMotion();
         CheckSwitchStates();
     }
 
@@ -36,7 +31,7 @@ public class PlayerAttackState : PlayerBaseState
         Ctx.IsAttackPressed = false;
 
         Ctx.CurrentAttackResetRoutine = Ctx.StartCoroutine(IAttackResetRoutine());
-        if (Ctx.JumpCount == 3)
+        if (Ctx.AttackCount == 3)
         {
             Ctx.JumpCount = 0;
             Ctx.Animator.SetInteger(Ctx.JumpCountHash, Ctx.JumpCount);
@@ -47,12 +42,10 @@ public class PlayerAttackState : PlayerBaseState
 
     public override void CheckSwitchStates() {
         if (!Ctx.IsAttackPressed && !Ctx.IsAttacking) {
-            if (!Ctx.IsMovementPressed) {
-                SwitchState(Factory.Idle());
-            } else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed) {
-                SwitchState(Factory.Walk());
+            if (Ctx.IsDodgePressed) {
+                SwitchState(Factory.Dodge());
             } else {
-                SwitchState(Factory.Run());
+                SwitchState(Factory.Standard());
             }
         }
     }
@@ -60,10 +53,12 @@ public class PlayerAttackState : PlayerBaseState
     void HandleMotion()
     {
         RaycastHit hit;
-
         if (Physics.SphereCast(Ctx.gameObject.transform.position, 2, Ctx.gameObject.transform.forward, out hit, 3, 1 << 15)) {
-            target = hit.collider.gameObject.transform;
+            Ctx.gameObject.transform.LookAt(hit.collider.gameObject.transform.position);
         }
+
+        Ctx.AppliedMovementX = Mathf.Lerp(Ctx.AppliedMovementX, 0, 0.1f);
+        Ctx.AppliedMovementZ = Mathf.Lerp(Ctx.AppliedMovementZ, 0, 0.1f);;
     }
 
     void HandleAttack()
@@ -75,8 +70,6 @@ public class PlayerAttackState : PlayerBaseState
         // set variables
         Ctx.IsAttacking = true;
         Ctx.IsAttackPressed = false;
-
-        if (Ctx.AttackCount>=3) Ctx.AttackCount = 0;
         Ctx.AttackCount += 1;
 
         // count attacks to transition to a specified animation
