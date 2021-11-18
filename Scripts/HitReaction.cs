@@ -43,6 +43,7 @@ public class HitReaction : MonoBehaviour, IDamagable
 
     public void GenerateArrow()
     {
+        Debug.Log("Here");
         firePointAim.UpdateTarget(player);
     }
 
