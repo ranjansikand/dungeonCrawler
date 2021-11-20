@@ -8,6 +8,7 @@ public class EnemyStateMachine : MonoBehaviour, IDamagable
     NavMeshAgent _agent;
     Animator _animator;
     Collider _collider;
+   
 
     // animator hashes
     int _isAttackingHash;
@@ -19,7 +20,7 @@ public class EnemyStateMachine : MonoBehaviour, IDamagable
     // health
     [SerializeField] int _health;
     bool _isDead;
-    WaitForSeconds delay = new WaitForSeconds(0.25f);
+    WaitForSeconds delay = new WaitForSeconds(0.1f);
 
     // patrolling
     Coroutine _currentPatrolRoutine;
@@ -81,6 +82,7 @@ public class EnemyStateMachine : MonoBehaviour, IDamagable
         StopAllCoroutines();
         _isDead = true;
 
+        _collider.enabled = false;
         _animator.SetTrigger(_isDeadHash);
     }
 

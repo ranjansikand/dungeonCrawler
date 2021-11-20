@@ -46,12 +46,10 @@ public class EnemyDetectedState : EnemyBaseState
 
     void RotateToFace()
     {
-        Vector3 targetDirection = (Ctx.Target.position + 5 * Ctx.Target.forward) - Ctx.transform.position;
+        Vector3 targetDirection = Ctx.Target.position - Ctx.transform.position;
         Quaternion currentRotation = Ctx.transform.rotation;
 
-        if (Mathf.Abs(Vector3.Angle(Ctx.transform.forward, Ctx.Target.position - Ctx.transform.position)) > 17.5f) {
-            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            Ctx.transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
-        }
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+        Ctx.transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
     }
 }

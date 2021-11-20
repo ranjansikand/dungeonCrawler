@@ -14,7 +14,6 @@ public class CameraController : MonoBehaviour
         if (player == null) player = GameObject.Find("Player").GetComponent<Transform>();
     }
 
-
     void LateUpdate()
     {
         float distance = Vector3.Distance(transform.position, player.position);
@@ -30,8 +29,6 @@ public class CameraController : MonoBehaviour
         Vector3 lerpPosition = Vector3.Lerp (transform.position, finalPosition, cameraSpeed);
         transform.position = lerpPosition;
     }
-
-
 
     void OnDrawGizmosSelected()
     {

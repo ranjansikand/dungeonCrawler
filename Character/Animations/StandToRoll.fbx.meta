@@ -1,11 +1,14 @@
 fileFormatVersion: 2
-guid: e7efc1afb4d5bc74b900bebb3953f226
+guid: d56daa166d2ab2042a0a28b533b84df9
 ModelImporter:
   serializedVersion: 20200
   internalIDToNameTable:
   - first:
       74: -203655887218126122
     second: mixamo.com
+  - first:
+      74: 6363703806791269319
+    second: Stand To Roll
   externalObjects: {}
   materials:
     materialImportMode: 2
@@ -33,7 +36,57 @@ ModelImporter:
     animationWrapMode: 0
     extraExposedTransformPaths: []
     extraUserProperties: []
-    clipAnimations: []
+    clipAnimations:
+    - serializedVersion: 16
+      name: Stand To Roll
+      takeName: mixamo.com
+      internalID: 0
+      firstFrame: 12
+      lastFrame: 51
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 1
+      loopBlendPositionY: 1
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 0
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 1
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events:
+      - time: 0.09342741
+        functionName: ToggleInvulnerable
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: e547941345756b8499dfd80e28b57c60, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.917635
+        functionName: ToggleInvulnerable
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: e547941345756b8499dfd80e28b57c60, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.9317903
+        functionName: ResetDodge
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: 3617a0a23e43ad64f9ab042f83231199, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
     isReadable: 0
   meshes:
     lODScreenPercentages: []

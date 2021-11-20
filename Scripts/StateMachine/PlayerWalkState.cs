@@ -16,8 +16,10 @@ public class PlayerWalkState : PlayerBaseState
 
     public override void UpdateState() {
         CheckSwitchStates();
-        Ctx.AppliedMovementX = Ctx.CurrentMovementInput.x * Ctx.WalkMultiplier;
-        Ctx.AppliedMovementZ = Ctx.CurrentMovementInput.y * Ctx.WalkMultiplier;
+        // Ctx.AppliedMovementX = Camera.main.transform.forward.x * Ctx.CurrentMovementInput.x * Ctx.WalkMultiplier;
+        Ctx.AppliedMovement = Ctx.Reference.forward * Ctx.CurrentMovementInput.y * Ctx.WalkMultiplier
+           + Ctx.Reference.right * Ctx.CurrentMovementInput.x * Ctx.WalkMultiplier + 
+           new Vector3(0, Ctx.AppliedMovementY, 0);
     }
 
     public override void ExitState() {}

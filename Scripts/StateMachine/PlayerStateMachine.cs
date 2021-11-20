@@ -8,6 +8,7 @@ public class PlayerStateMachine : MonoBehaviour
     CharacterController _characterController;
     Animator _animator;
     PlayerInput _playerInput;
+     
 
     int _isWalkingHash;
     int _isRunningHash;
@@ -20,7 +21,6 @@ public class PlayerStateMachine : MonoBehaviour
     bool _isRunPressed;
 
     // constants
-    float _rotationFactorPerFrame = 15.0f;
     [SerializeField] float _walkMultiplier = 2.0f;
     [SerializeField] float _runMultiplier = 4.0f;
     int _zero = 0;
@@ -49,16 +49,21 @@ public class PlayerStateMachine : MonoBehaviour
     bool _isAttacking = false;
     int _attackingHash;
     int _attackCountHash;
-    int _attackCount = 0;
+    int _attackCount = 1;
     Coroutine _currentAttackResetRoutine = null;
 
     // dodge variables
     bool _isDodgePressed = false;
     bool _isDodging = false;
     int _dodgingHash;
+    Coroutine _currentDodgeRoutine = null;
 
     // death
     bool isDead;
+
+    // camera rotation
+    Transform _reference; 
+    float speedSmoothVelocity;
 
     // state variables
     PlayerBaseState _currentState;
@@ -69,6 +74,7 @@ public class PlayerStateMachine : MonoBehaviour
     public CharacterController CharacterController { get { return _characterController; }}
     public Coroutine CurrentJumpResetRoutine { get { return _currentJumpResetRoutine; } set { _currentJumpResetRoutine = value; }}
     public Coroutine CurrentAttackResetRoutine { get { return _currentAttackResetRoutine; } set { _currentAttackResetRoutine = value; }}
+    public Coroutine CurrentDodgeRoutine { get { return _currentDodgeRoutine; } set { _currentDodgeRoutine = value; }}
     public Dictionary<int, float> InitialJumpVelocities { get {return _initialJumpVelocities; }}
     public Dictionary<int, float> JumpGravities { get { return _jumpGravities; }}
     public int JumpCount { get { return _jumpCount; } set {_jumpCount = value; }}
@@ -99,6 +105,8 @@ public class PlayerStateMachine : MonoBehaviour
     public float RunMultiplier { get { return _runMultiplier; }}
     public float WalkMultiplier { get { return _walkMultiplier; }}
     public Vector2 CurrentMovementInput { get { return _currentMovementInput; }}
+    public Vector3 AppliedMovement { get { return _appliedMovement; } set { _appliedMovement = value; }}
+    public Transform Reference { get { return _reference; }}
 
     void Awake()
     {
@@ -130,6 +138,8 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.CharacterControls.Attack.canceled += OnAttack;
         _playerInput.CharacterControls.Dodge.started += OnDodge;
         _playerInput.CharacterControls.Dodge.canceled += OnDodge;
+
+        _reference = new GameObject().transform;
 
         SetupJumpVariables();
         StartCoroutine("CheckForGround");
@@ -180,13 +190,12 @@ public class PlayerStateMachine : MonoBehaviour
 
     void HandleRotation()
     {
-        Vector3 positionToLookAt = new Vector3(_currentMovementInput.x, _zero, _currentMovementInput.y);
-        Quaternion currentRotation = transform.rotation;
-
+        _reference.eulerAngles = new Vector3(0, Camera.main.transform.eulerAngles.y, 0);
+  
         if (_isMovementPressed)
         {
-            Quaternion targetRotation = Quaternion.LookRotation(positionToLookAt);
-            transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, _rotationFactorPerFrame * Time.deltaTime);
+            float targetRotation = Mathf.Atan2(_currentMovementInput.x, _currentMovementInput.y) * Mathf.Rad2Deg + _reference.eulerAngles.y;
+            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref speedSmoothVelocity, 0.1f);
         }
     }
 

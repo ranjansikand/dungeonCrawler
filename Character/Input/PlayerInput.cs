@@ -65,6 +65,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""CameraControls"",
+                    ""type"": ""Value"",
+                    ""id"": ""b44ebc7e-da63-4a3e-bcf7-b42eb883cb2e"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -214,7 +222,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""08080b5a-d1dc-4b59-bd91-e567216b7225"",
-                    ""path"": ""<Keyboard>/enter"",
+                    ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -243,6 +251,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8eb8ec37-680d-45ba-981b-423446b6107e"",
+                    ""path"": ""<Gamepad>/rightStick"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraControls"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1caf6983-5b1c-4358-80a1-5e6ab4e41caf"",
+                    ""path"": ""<Mouse>/delta"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraControls"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -257,6 +287,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_CharacterControls_Menu = m_CharacterControls.FindAction("Menu", throwIfNotFound: true);
         m_CharacterControls_Attack = m_CharacterControls.FindAction("Attack", throwIfNotFound: true);
         m_CharacterControls_Dodge = m_CharacterControls.FindAction("Dodge", throwIfNotFound: true);
+        m_CharacterControls_CameraControls = m_CharacterControls.FindAction("CameraControls", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -312,6 +343,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_CharacterControls_Menu;
     private readonly InputAction m_CharacterControls_Attack;
     private readonly InputAction m_CharacterControls_Dodge;
+    private readonly InputAction m_CharacterControls_CameraControls;
     public struct CharacterControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -322,6 +354,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Menu => m_Wrapper.m_CharacterControls_Menu;
         public InputAction @Attack => m_Wrapper.m_CharacterControls_Attack;
         public InputAction @Dodge => m_Wrapper.m_CharacterControls_Dodge;
+        public InputAction @CameraControls => m_Wrapper.m_CharacterControls_CameraControls;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -349,6 +382,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Dodge.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
                 @Dodge.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
                 @Dodge.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
+                @CameraControls.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
+                @CameraControls.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
+                @CameraControls.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
             }
             m_Wrapper.m_CharacterControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -371,6 +407,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Dodge.started += instance.OnDodge;
                 @Dodge.performed += instance.OnDodge;
                 @Dodge.canceled += instance.OnDodge;
+                @CameraControls.started += instance.OnCameraControls;
+                @CameraControls.performed += instance.OnCameraControls;
+                @CameraControls.canceled += instance.OnCameraControls;
             }
         }
     }
@@ -383,5 +422,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMenu(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
+        void OnCameraControls(InputAction.CallbackContext context);
     }
 }
