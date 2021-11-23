@@ -27,12 +27,20 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""Dodge"",
+                    ""type"": ""Button"",
+                    ""id"": ""64e7f107-c568-4067-942f-94ceb2ed67ca"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""MultiTap""
+                },
+                {
                     ""name"": ""Run"",
                     ""type"": ""Button"",
                     ""id"": ""8ef173de-c631-45ea-8f47-28b012f7d4f8"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """"
+                    ""interactions"": ""Hold""
                 },
                 {
                     ""name"": ""Jump"",
@@ -54,14 +62,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""name"": ""Attack"",
                     ""type"": ""Button"",
                     ""id"": ""ba12b8fe-30b9-4a79-b3c2-4d4d37d69fcc"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Dodge"",
-                    ""type"": ""Button"",
-                    ""id"": ""64e7f107-c568-4067-942f-94ceb2ed67ca"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
@@ -156,7 +156,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""706fe556-fb6a-4fbe-b62d-7a1d2ee3410b"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""path"": ""<Gamepad>/buttonEast"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -232,28 +232,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""7d52dbe2-d8d7-43f5-9030-ee7a16735e16"",
-                    ""path"": ""<Gamepad>/buttonEast"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dodge"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""f9ae09ca-9be4-4b59-b575-e7baea133ff3"",
-                    ""path"": ""<Keyboard>/alt"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Dodge"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""8eb8ec37-680d-45ba-981b-423446b6107e"",
                     ""path"": ""<Gamepad>/rightStick"",
                     ""interactions"": """",
@@ -273,6 +251,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""CameraControls"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f9ae09ca-9be4-4b59-b575-e7baea133ff3"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7d52dbe2-d8d7-43f5-9030-ee7a16735e16"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Dodge"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -282,11 +282,11 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         // CharacterControls
         m_CharacterControls = asset.FindActionMap("CharacterControls", throwIfNotFound: true);
         m_CharacterControls_Move = m_CharacterControls.FindAction("Move", throwIfNotFound: true);
+        m_CharacterControls_Dodge = m_CharacterControls.FindAction("Dodge", throwIfNotFound: true);
         m_CharacterControls_Run = m_CharacterControls.FindAction("Run", throwIfNotFound: true);
         m_CharacterControls_Jump = m_CharacterControls.FindAction("Jump", throwIfNotFound: true);
         m_CharacterControls_Menu = m_CharacterControls.FindAction("Menu", throwIfNotFound: true);
         m_CharacterControls_Attack = m_CharacterControls.FindAction("Attack", throwIfNotFound: true);
-        m_CharacterControls_Dodge = m_CharacterControls.FindAction("Dodge", throwIfNotFound: true);
         m_CharacterControls_CameraControls = m_CharacterControls.FindAction("CameraControls", throwIfNotFound: true);
     }
 
@@ -338,22 +338,22 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputActionMap m_CharacterControls;
     private ICharacterControlsActions m_CharacterControlsActionsCallbackInterface;
     private readonly InputAction m_CharacterControls_Move;
+    private readonly InputAction m_CharacterControls_Dodge;
     private readonly InputAction m_CharacterControls_Run;
     private readonly InputAction m_CharacterControls_Jump;
     private readonly InputAction m_CharacterControls_Menu;
     private readonly InputAction m_CharacterControls_Attack;
-    private readonly InputAction m_CharacterControls_Dodge;
     private readonly InputAction m_CharacterControls_CameraControls;
     public struct CharacterControlsActions
     {
         private @PlayerInput m_Wrapper;
         public CharacterControlsActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_CharacterControls_Move;
+        public InputAction @Dodge => m_Wrapper.m_CharacterControls_Dodge;
         public InputAction @Run => m_Wrapper.m_CharacterControls_Run;
         public InputAction @Jump => m_Wrapper.m_CharacterControls_Jump;
         public InputAction @Menu => m_Wrapper.m_CharacterControls_Menu;
         public InputAction @Attack => m_Wrapper.m_CharacterControls_Attack;
-        public InputAction @Dodge => m_Wrapper.m_CharacterControls_Dodge;
         public InputAction @CameraControls => m_Wrapper.m_CharacterControls_CameraControls;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
@@ -367,6 +367,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Move.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnMove;
+                @Dodge.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
+                @Dodge.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
+                @Dodge.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
                 @Run.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRun;
@@ -379,9 +382,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Attack.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAttack;
                 @Attack.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAttack;
                 @Attack.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnAttack;
-                @Dodge.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
-                @Dodge.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
-                @Dodge.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnDodge;
                 @CameraControls.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
                 @CameraControls.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
                 @CameraControls.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
@@ -392,6 +392,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Dodge.started += instance.OnDodge;
+                @Dodge.performed += instance.OnDodge;
+                @Dodge.canceled += instance.OnDodge;
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
@@ -404,9 +407,6 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Attack.started += instance.OnAttack;
                 @Attack.performed += instance.OnAttack;
                 @Attack.canceled += instance.OnAttack;
-                @Dodge.started += instance.OnDodge;
-                @Dodge.performed += instance.OnDodge;
-                @Dodge.canceled += instance.OnDodge;
                 @CameraControls.started += instance.OnCameraControls;
                 @CameraControls.performed += instance.OnCameraControls;
                 @CameraControls.canceled += instance.OnCameraControls;
@@ -417,11 +417,11 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     public interface ICharacterControlsActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnDodge(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnMenu(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
-        void OnDodge(InputAction.CallbackContext context);
         void OnCameraControls(InputAction.CallbackContext context);
     }
 }

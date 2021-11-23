@@ -126,18 +126,18 @@ public class PlayerStateMachine : MonoBehaviour
         _attackCountHash = Animator.StringToHash("attackCount");
         _dodgingHash = Animator.StringToHash("isDodging");
 
-        _playerInput.CharacterControls.Move.started += OnMovementInput;
+        _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
-        _playerInput.CharacterControls.Run.started += OnRun;
+        _playerInput.CharacterControls.Run.performed += OnRun;
         _playerInput.CharacterControls.Run.canceled += OnRun;
-        _playerInput.CharacterControls.Jump.started += OnJump;
+        _playerInput.CharacterControls.Jump.performed += OnJump;
         _playerInput.CharacterControls.Jump.canceled += OnJump;
         _playerInput.CharacterControls.Menu.performed += OnMenu;
-        _playerInput.CharacterControls.Attack.started += OnAttack;
+        _playerInput.CharacterControls.Attack.performed += OnAttack;
         _playerInput.CharacterControls.Attack.canceled += OnAttack;
-        _playerInput.CharacterControls.Dodge.started += OnDodge;
-        _playerInput.CharacterControls.Dodge.canceled += OnDodge;
+        _playerInput.CharacterControls.Dodge.performed += OnDodge;
+        _playerInput.CharacterControls.Dodge.canceled -= OnDodge;
 
         _reference = new GameObject().transform;
 
@@ -238,7 +238,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     void OnDodge(InputAction.CallbackContext context)
     {
-        _isDodgePressed = context.ReadValueAsButton();
+        _isDodgePressed = true;
     }
 
     void OnEnable()

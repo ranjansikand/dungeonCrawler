@@ -9,7 +9,20 @@ public class PlayerAttackState : PlayerBaseState
     IEnumerator IAttackResetRoutine()
     {
         yield return new WaitForSeconds(1f);
-        Ctx.AttackCount = 0;
+        Ctx.AttackCount = 1;
+    }
+
+    IEnumerator ISwitchToStandard()
+    {
+        float value = 1;
+
+        for (int i=0; i<30; i++) {
+            value -= 1f/30;
+            Ctx.Animator.SetFloat("Blend", value);
+            yield return null;
+        }
+
+        SwitchState(Factory.Standard());
     }
 
     public PlayerAttackState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
@@ -27,7 +40,6 @@ public class PlayerAttackState : PlayerBaseState
 
         if (Ctx.IsAttackPressed && !cachedAttack) {
             cachedAttack = true;
-            Ctx.AttackCount += 1;
         }
     }
 
@@ -35,7 +47,7 @@ public class PlayerAttackState : PlayerBaseState
         Ctx.Animator.SetBool(Ctx.AttackingHash, false);
         Ctx.IsAttackPressed = false;
 
-        if (!cachedAttack) Ctx.AttackCount = 1;
+        if (!cachedAttack) Ctx.CurrentAttackResetRoutine = Ctx.StartCoroutine(IAttackResetRoutine());
     }
 
     public override void InitializeSubState() {}
@@ -49,6 +61,7 @@ public class PlayerAttackState : PlayerBaseState
                 SwitchState(Factory.Dodge());
             } else {
                 SwitchState(Factory.Standard());
+                // Ctx.StartCoroutine(ISwitchToStandard());
             }
         }
     }
@@ -61,6 +74,8 @@ public class PlayerAttackState : PlayerBaseState
 
     void HandleAttack()
     {
+        if (Ctx.CurrentAttackResetRoutine != null) Ctx.StopCoroutine(Ctx.CurrentAttackResetRoutine);
+
         // set variables
         Ctx.IsAttacking = true;
         Ctx.IsAttackPressed = false;
@@ -69,8 +84,7 @@ public class PlayerAttackState : PlayerBaseState
         Ctx.Animator.SetBool(Ctx.AttackingHash, true);
         Ctx.Animator.SetInteger(Ctx.AttackCountHash, Ctx.AttackCount);
 
-        if (Ctx.AttackCount == 3) {
-            Ctx.AttackCount = 1;
-        }
+        if (Ctx.AttackCount == 3) Ctx.AttackCount = 1;
+        else Ctx.AttackCount += 1;
     }
 }
