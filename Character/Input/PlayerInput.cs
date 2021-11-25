@@ -73,6 +73,22 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""LockOn"",
+                    ""type"": ""Button"",
+                    ""id"": ""c72cb6c1-b352-48be-a51a-89979d5344df"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Block"",
+                    ""type"": ""Button"",
+                    ""id"": ""b706083d-5bad-4f30-b706-6d9803c7fbd9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -273,6 +289,50 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Dodge"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""043dd670-28f6-413d-a021-fcfe4e0d73d6"",
+                    ""path"": ""<Mouse>/middleButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0a6380c9-f466-4215-8847-ccde323525db"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""LockOn"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6b8adabe-248e-448a-87eb-f2600ac2ef4c"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""18a9cfc7-93a0-43db-8a4a-8abb12bf7b61"",
+                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Block"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -288,6 +348,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_CharacterControls_Menu = m_CharacterControls.FindAction("Menu", throwIfNotFound: true);
         m_CharacterControls_Attack = m_CharacterControls.FindAction("Attack", throwIfNotFound: true);
         m_CharacterControls_CameraControls = m_CharacterControls.FindAction("CameraControls", throwIfNotFound: true);
+        m_CharacterControls_LockOn = m_CharacterControls.FindAction("LockOn", throwIfNotFound: true);
+        m_CharacterControls_Block = m_CharacterControls.FindAction("Block", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -344,6 +406,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_CharacterControls_Menu;
     private readonly InputAction m_CharacterControls_Attack;
     private readonly InputAction m_CharacterControls_CameraControls;
+    private readonly InputAction m_CharacterControls_LockOn;
+    private readonly InputAction m_CharacterControls_Block;
     public struct CharacterControlsActions
     {
         private @PlayerInput m_Wrapper;
@@ -355,6 +419,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Menu => m_Wrapper.m_CharacterControls_Menu;
         public InputAction @Attack => m_Wrapper.m_CharacterControls_Attack;
         public InputAction @CameraControls => m_Wrapper.m_CharacterControls_CameraControls;
+        public InputAction @LockOn => m_Wrapper.m_CharacterControls_LockOn;
+        public InputAction @Block => m_Wrapper.m_CharacterControls_Block;
         public InputActionMap Get() { return m_Wrapper.m_CharacterControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -385,6 +451,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @CameraControls.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
                 @CameraControls.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
                 @CameraControls.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnCameraControls;
+                @LockOn.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnLockOn;
+                @LockOn.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnLockOn;
+                @LockOn.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnLockOn;
+                @Block.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnBlock;
+                @Block.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnBlock;
+                @Block.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnBlock;
             }
             m_Wrapper.m_CharacterControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -410,6 +482,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @CameraControls.started += instance.OnCameraControls;
                 @CameraControls.performed += instance.OnCameraControls;
                 @CameraControls.canceled += instance.OnCameraControls;
+                @LockOn.started += instance.OnLockOn;
+                @LockOn.performed += instance.OnLockOn;
+                @LockOn.canceled += instance.OnLockOn;
+                @Block.started += instance.OnBlock;
+                @Block.performed += instance.OnBlock;
+                @Block.canceled += instance.OnBlock;
             }
         }
     }
@@ -423,5 +501,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMenu(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnCameraControls(InputAction.CallbackContext context);
+        void OnLockOn(InputAction.CallbackContext context);
+        void OnBlock(InputAction.CallbackContext context);
     }
 }

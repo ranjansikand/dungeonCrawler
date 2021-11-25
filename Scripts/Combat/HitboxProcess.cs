@@ -2,7 +2,12 @@ using UnityEngine;
 
 public class HitboxProcess : MonoBehaviour
 {
-    [SerializeField] int dmg = 1;
+    int dmg;
+
+    public void SetDamage(int damage)
+    {
+        dmg = damage;
+    }
 
     void OnTriggerEnter(Collider other)
     {

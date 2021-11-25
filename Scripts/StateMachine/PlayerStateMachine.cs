@@ -8,7 +8,6 @@ public class PlayerStateMachine : MonoBehaviour
     CharacterController _characterController;
     Animator _animator;
     PlayerInput _playerInput;
-     
 
     int _isWalkingHash;
     int _isRunningHash;
@@ -56,14 +55,22 @@ public class PlayerStateMachine : MonoBehaviour
     bool _isDodgePressed = false;
     bool _isDodging = false;
     int _dodgingHash;
-    Coroutine _currentDodgeRoutine = null;
+
+    // blocking
+    bool _isBlockPressed;
+    bool _isBlocking;
+    public delegate void OnBlockDelegate();
+    public static OnBlockDelegate onBlockStarted;
+    public static OnBlockDelegate onBlockEnded;
 
     // death
     bool isDead;
 
     // camera rotation
     Transform _reference; 
-    float speedSmoothVelocity;
+    float _speedSmoothVelocity;
+    bool _lockedOn = false;
+    Transform _target;
 
     // state variables
     PlayerBaseState _currentState;
@@ -71,10 +78,11 @@ public class PlayerStateMachine : MonoBehaviour
 
     public PlayerBaseState CurrentState { get {return _currentState;} set {_currentState = value; }}
     public Animator Animator { get { return _animator; }}
-    public CharacterController CharacterController { get { return _characterController; }}
+    public Transform Target { set { _target = value; }}
     public Coroutine CurrentJumpResetRoutine { get { return _currentJumpResetRoutine; } set { _currentJumpResetRoutine = value; }}
     public Coroutine CurrentAttackResetRoutine { get { return _currentAttackResetRoutine; } set { _currentAttackResetRoutine = value; }}
-    public Coroutine CurrentDodgeRoutine { get { return _currentDodgeRoutine; } set { _currentDodgeRoutine = value; }}
+    public OnBlockDelegate OnBlockStarted { get { return onBlockStarted; }}
+    public OnBlockDelegate OnBlockEnded { get { return onBlockEnded; }}
     public Dictionary<int, float> InitialJumpVelocities { get {return _initialJumpVelocities; }}
     public Dictionary<int, float> JumpGravities { get { return _jumpGravities; }}
     public int JumpCount { get { return _jumpCount; } set {_jumpCount = value; }}
@@ -97,6 +105,8 @@ public class PlayerStateMachine : MonoBehaviour
     public bool IsDodgePressed { get { return _isDodgePressed; } set { _isDodgePressed = value; }}
     public bool IsDodging { get { return _isDodging; } set { _isDodging = value; }}
     public bool IsDead { get {return isDead;} set {isDead = value; }}
+    public bool IsBlockPressed { get { return _isBlockPressed; }}
+    public bool IsBlocking { get { return _isBlocking; } set { _isBlocking = value; }}
     public float GroundedGravity { get { return _groundedGravity; }}
     public float CurrentMovementY { get { return _currentMovement.y; } set { _currentMovement.y = value; }}
     public float AppliedMovementX { get { return _appliedMovement.x; } set { _appliedMovement.x = value; }}
@@ -128,7 +138,6 @@ public class PlayerStateMachine : MonoBehaviour
 
         _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Move.canceled += OnMovementInput;
-        _playerInput.CharacterControls.Move.performed += OnMovementInput;
         _playerInput.CharacterControls.Run.performed += OnRun;
         _playerInput.CharacterControls.Run.canceled += OnRun;
         _playerInput.CharacterControls.Jump.performed += OnJump;
@@ -138,11 +147,15 @@ public class PlayerStateMachine : MonoBehaviour
         _playerInput.CharacterControls.Attack.canceled += OnAttack;
         _playerInput.CharacterControls.Dodge.performed += OnDodge;
         _playerInput.CharacterControls.Dodge.canceled -= OnDodge;
+        _playerInput.CharacterControls.LockOn.performed += OnLockOn;
+        _playerInput.CharacterControls.LockOn.canceled -= OnLockOn;
+        _playerInput.CharacterControls.Block.performed += OnBlock;
+        _playerInput.CharacterControls.Block.canceled += OnBlock;
 
         _reference = new GameObject().transform;
 
         SetupJumpVariables();
-        StartCoroutine("CheckForGround");
+        StartCoroutine(CheckForGround());
     }
 
     void SetupJumpVariables()
@@ -191,11 +204,24 @@ public class PlayerStateMachine : MonoBehaviour
     void HandleRotation()
     {
         _reference.eulerAngles = new Vector3(0, Camera.main.transform.eulerAngles.y, 0);
-  
-        if (_isMovementPressed)
-        {
-            float targetRotation = Mathf.Atan2(_currentMovementInput.x, _currentMovementInput.y) * Mathf.Rad2Deg + _reference.eulerAngles.y;
-            transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref speedSmoothVelocity, 0.1f);
+
+        if (_lockedOn) {
+            // strafe movement
+            Vector3 targetDirection = _target.position - transform.position;
+            Quaternion currentRotation = transform.rotation;
+    
+            if (_isMovementPressed) {
+                Quaternion targetRotation = Quaternion.LookRotation(targetDirection.normalized);
+                transform.rotation = Quaternion.Slerp(currentRotation, targetRotation, 15.0f * Time.deltaTime);
+            }
+            return;
+        }
+        if (!_isAttacking && !_isDodging) {
+            // normal movement
+            if (_isMovementPressed) {
+                float targetRotation = Mathf.Atan2(_currentMovementInput.x, _currentMovementInput.y) * Mathf.Rad2Deg + _reference.eulerAngles.y;
+                transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref _speedSmoothVelocity, 0.1f);
+            }
         }
     }
 
@@ -239,6 +265,17 @@ public class PlayerStateMachine : MonoBehaviour
     void OnDodge(InputAction.CallbackContext context)
     {
         _isDodgePressed = true;
+    }
+
+    void OnLockOn(InputAction.CallbackContext context)
+    {
+        CameraManager.instance.OnLockOn(_lockedOn);
+        _lockedOn = _target != null ? true : false;
+    }
+
+    void OnBlock(InputAction.CallbackContext context)
+    {
+        _isBlockPressed = context.ReadValueAsButton();
     }
 
     void OnEnable()

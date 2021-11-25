@@ -3,7 +3,6 @@
 // by the enemy state machine.
 
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Archer : MonoBehaviour
 {

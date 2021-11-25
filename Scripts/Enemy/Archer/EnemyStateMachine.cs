@@ -19,6 +19,7 @@ public class EnemyStateMachine : MonoBehaviour, IDamagable
 
     // health
     [SerializeField] int _health;
+    [Tooltip("Damage needed to stagger")][SerializeField] int _hurtThreshold;
     bool _isDead;
     WaitForSeconds delay = new WaitForSeconds(0.1f);
 
@@ -90,6 +91,11 @@ public class EnemyStateMachine : MonoBehaviour, IDamagable
     {
         _health -= damage;
 
-        if (_health > 0) _animator.SetTrigger(_isHurtHash);
+        if (damage > _hurtThreshold && _health > 0) _animator.SetTrigger(_isHurtHash);
+    }
+
+    public int MaxHealth()
+    {
+        return _health;
     }
 }

@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerAttackState : PlayerBaseState
@@ -12,22 +11,9 @@ public class PlayerAttackState : PlayerBaseState
         Ctx.AttackCount = 1;
     }
 
-    IEnumerator ISwitchToStandard()
-    {
-        float value = 1;
-
-        for (int i=0; i<30; i++) {
-            value -= 1f/30;
-            Ctx.Animator.SetFloat("Blend", value);
-            yield return null;
-        }
-
-        SwitchState(Factory.Standard());
-    }
-
     public PlayerAttackState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
     : base (currentContext, playerStateFactory) {
-        IsLeafState = true;
+        InitializeSubState();
     }
 
     public override void EnterState() {
@@ -50,18 +36,26 @@ public class PlayerAttackState : PlayerBaseState
         if (!cachedAttack) Ctx.CurrentAttackResetRoutine = Ctx.StartCoroutine(IAttackResetRoutine());
     }
 
-    public override void InitializeSubState() {}
+    public override void InitializeSubState() {
+        if (Ctx.IsBlocking || Ctx.IsBlockPressed) {
+            SetSubState(Factory.Block());
+        } else {
+            SetSubState(Factory.Standard());
+        }
+    }
 
     public override void CheckSwitchStates() {
         if (!Ctx.IsAttacking) {
             if (cachedAttack) {
                 SwitchState(Factory.Attack());
-            }
-            else if (Ctx.IsDodgePressed) {
+            } else if (Ctx.IsDodgePressed) {
                 SwitchState(Factory.Dodge());
+            } else if (Ctx.IsMovementPressed && Ctx.IsRunPressed) {
+                SwitchState(Factory.Run());
+            } else if (Ctx.IsMovementPressed) {
+                SwitchState(Factory.Walk());
             } else {
-                SwitchState(Factory.Standard());
-                // Ctx.StartCoroutine(ISwitchToStandard());
+                SwitchState(Factory.Idle());
             }
         }
     }

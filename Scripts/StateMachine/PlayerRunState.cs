@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerRunState : PlayerBaseState
@@ -24,17 +22,19 @@ public class PlayerRunState : PlayerBaseState
     public override void ExitState() {}
 
     public override void InitializeSubState() {
-        if (Ctx.IsAttackPressed || Ctx.IsAttacking) {
-            SetSubState(Factory.Attack());
-        } else if (Ctx.IsDodgePressed || Ctx.IsDodging) {
-            SetSubState(Factory.Dodge());
+        if (Ctx.IsBlocking || Ctx.IsBlockPressed) {
+            SetSubState(Factory.Block());
         } else {
             SetSubState(Factory.Standard());
         }
     }
 
     public override void CheckSwitchStates() {
-        if (!Ctx.IsMovementPressed) {
+        if (Ctx.IsAttackPressed || Ctx.IsAttacking) {
+            SwitchState(Factory.Attack());
+        } else if (Ctx.IsDodgePressed || Ctx.IsDodging) {
+            SwitchState(Factory.Dodge());
+        }else if (!Ctx.IsMovementPressed) {
             SwitchState(Factory.Idle());
         } else if (Ctx.IsMovementPressed && !Ctx.IsRunPressed) {
             SwitchState(Factory.Walk());

@@ -3,14 +3,12 @@ using UnityEngine;
 public abstract class PlayerBaseState
 {
     private bool _isRootState = false;
-    private bool _isLeafState = false;
     private PlayerStateMachine _ctx;
     private PlayerStateFactory _factory;
     private PlayerBaseState _currentSubState;
     private PlayerBaseState _currentSuperState;
 
     protected bool IsRootState { set { _isRootState = value; }}
-    protected bool IsLeafState { set { _isLeafState = value; }}
     protected PlayerStateMachine Ctx { get { return _ctx; }}
     protected PlayerStateFactory Factory {get {return _factory; }}
 

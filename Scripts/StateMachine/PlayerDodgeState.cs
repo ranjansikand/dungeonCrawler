@@ -6,7 +6,7 @@ public class PlayerDodgeState : PlayerBaseState
 
     public PlayerDodgeState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
     : base (currentContext, playerStateFactory) {
-        IsLeafState = true;
+        InitializeSubState();
     }
 
     public override void EnterState() {
@@ -23,15 +23,25 @@ public class PlayerDodgeState : PlayerBaseState
 
     public override void ExitState() {}
 
-    public override void InitializeSubState() {}
+    public override void InitializeSubState() {
+        if (Ctx.IsBlocking || Ctx.IsBlockPressed) {
+            SetSubState(Factory.Block());
+        } else {
+            SetSubState(Factory.Standard());
+        }
+    }
 
     public override void CheckSwitchStates() {
         if (!Ctx.IsDodging)
         {
            if (Ctx.IsAttackPressed || Ctx.IsAttacking) {
                 SwitchState(Factory.Attack());
+            } else if (Ctx.IsMovementPressed && Ctx.IsRunPressed) {
+                SwitchState(Factory.Run());
+            } else if (Ctx.IsMovementPressed) {
+                SwitchState(Factory.Walk());
             } else {
-                SwitchState(Factory.Standard());
+                SwitchState(Factory.Idle());
             }
         }
     }

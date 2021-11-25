@@ -3,15 +3,26 @@ using UnityEngine;
 
 public class Combat : MonoBehaviour, IDamagable
 {
-    [SerializeField] Collider weaponHitbox;
+    [Header("General combat stats")]
+    [SerializeField] GameObject weapon;
+    [SerializeField] int damage = 1;
     [SerializeField] CharacterController controller;
+    
+    Collider weaponHitbox;
+    HitboxProcess hitboxStats;
 
+
+    [Header("Explosions")]
     [SerializeField] int explosiondmg = 1;
     [SerializeField] Transform _tipOfWeapon;
     [SerializeField] float explosionRadius = 1.5f;
 
+
+    [Header("Health")]
     [SerializeField] int maxHealth = 10;
     int health;
+
+
     PlayerStateMachine player;
     bool invulnerable = false;
 
@@ -20,7 +31,14 @@ public class Combat : MonoBehaviour, IDamagable
         player = GetComponent<PlayerStateMachine>();
         health = maxHealth;
 
-        StartCoroutine("CheckForDeath");
+        weaponHitbox = weapon.GetComponent<Collider>();
+        hitboxStats = weapon.GetComponent<HitboxProcess>();
+
+        PlayerStateMachine.onBlockStarted += OnBlockStarted;
+        PlayerStateMachine.onBlockEnded += OnBlockEnded;
+
+        hitboxStats.SetDamage(damage);
+        StartCoroutine(CheckForDeath());
     }
 
     IEnumerator CheckForDeath()
@@ -32,8 +50,20 @@ public class Combat : MonoBehaviour, IDamagable
         }
     }
 
+    void OnBlockStarted() {
+        // instantiate effect
+        invulnerable = true;
+        hitboxStats.SetDamage(0);
+    }
+    void OnBlockEnded() {
+        // destroy effect
+        invulnerable = false;
+        hitboxStats.SetDamage(damage);
+    }
+
     public void ToggleHitbox()
     {
+        // call from attack animations to enable impacts
         weaponHitbox.enabled = !weaponHitbox.enabled;
     }
 
@@ -69,6 +99,12 @@ public class Combat : MonoBehaviour, IDamagable
         if (!invulnerable) health -= damage;
 
         Debug.Log(health);
+    }
+
+    public int MaxHealth()
+    {
+        // required for IDamagable
+        return maxHealth;
     }
 
     void Die()

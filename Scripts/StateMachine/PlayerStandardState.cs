@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+// State that handles transitions in and out of blocking
+// Has no native behavior
 
 public class PlayerStandardState : PlayerBaseState
 {
     public PlayerStandardState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
-    : base (currentContext, playerStateFactory) {
-        IsLeafState = true;
-    }
+    : base (currentContext, playerStateFactory) {}
 
     public override void EnterState() {}
 
@@ -20,10 +17,8 @@ public class PlayerStandardState : PlayerBaseState
     public override void InitializeSubState() {}
 
     public override void CheckSwitchStates() {
-        if (Ctx.IsAttackPressed) {
-            SwitchState(Factory.Attack());
-        } else if (Ctx.IsDodgePressed) {
-            SwitchState(Factory.Dodge());
+        if (Ctx.IsBlockPressed) {
+            SwitchState(Factory.Block());
         }
     }
 }

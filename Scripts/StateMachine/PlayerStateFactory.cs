@@ -37,13 +37,18 @@ public class PlayerStateFactory
         return new PlayerAttackState(_context, this);
     }
 
+    public PlayerBaseState Dodge()
+    {
+        return new PlayerDodgeState(_context, this);
+    }
+
     public PlayerBaseState Standard()
     {
         return new PlayerStandardState(_context, this);
     }
 
-    public PlayerBaseState Dodge()
+    public PlayerBaseState Block()
     {
-        return new PlayerDodgeState(_context, this);
+        return new PlayerBlockState(_context, this);
     }
 }
