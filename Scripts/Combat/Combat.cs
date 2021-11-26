@@ -1,15 +1,16 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Combat : MonoBehaviour, IDamagable
 {
     [Header("General combat stats")]
-    [SerializeField] GameObject weapon;
-    [SerializeField] int damage = 1;
-    [SerializeField] CharacterController controller;
+    [SerializeField] GameObject _weapon;
+    [SerializeField] int _damage = 1;
+    [SerializeField] CharacterController _controller;
     
-    Collider weaponHitbox;
-    HitboxProcess hitboxStats;
+    Collider _weaponHitbox;
+    HitboxProcess _hitboxStats;
 
 
     [Header("Explosions")]
@@ -19,25 +20,35 @@ public class Combat : MonoBehaviour, IDamagable
 
 
     [Header("Health")]
-    [SerializeField] int maxHealth = 10;
-    int health;
+    [SerializeField] int _maxHealth = 10;
+    int _health;
+
+
+    [Header("Blocking")]
+    [SerializeField] GameObject _parentObj;
+    [SerializeField] Shader _standardShader;
+    [SerializeField] Shader _blockingShader;
+
+    Renderer[] _renderers;
 
 
     PlayerStateMachine player;
-    bool invulnerable = false;
+    bool _invulnerable = false;
 
     void Awake()
     {
         player = GetComponent<PlayerStateMachine>();
-        health = maxHealth;
+        _health = _maxHealth;
 
-        weaponHitbox = weapon.GetComponent<Collider>();
-        hitboxStats = weapon.GetComponent<HitboxProcess>();
+        _weaponHitbox = _weapon.GetComponent<Collider>();
+        _hitboxStats = _weapon.GetComponent<HitboxProcess>();
+
+        _renderers = GetComponentsInChildren<Renderer>();
 
         PlayerStateMachine.onBlockStarted += OnBlockStarted;
         PlayerStateMachine.onBlockEnded += OnBlockEnded;
 
-        hitboxStats.SetDamage(damage);
+        _hitboxStats.SetDamage(_damage);
         StartCoroutine(CheckForDeath());
     }
 
@@ -45,31 +56,39 @@ public class Combat : MonoBehaviour, IDamagable
     {
         while (!player.IsDead)
         {
-            if (health <= 0) Die();
+            if (_health <= 0) Die();
             yield return new WaitForSeconds(.1f);
         }
     }
 
     void OnBlockStarted() {
         // instantiate effect
-        invulnerable = true;
-        hitboxStats.SetDamage(0);
+        for (int i = 0; i < _renderers.Length; i++) {
+            _renderers[i].material.shader = _blockingShader;
+        }
+        // negate damaging
+        _invulnerable = true;
+        _hitboxStats.SetDamage(0);
     }
     void OnBlockEnded() {
-        // destroy effect
-        invulnerable = false;
-        hitboxStats.SetDamage(damage);
+        // end effect
+        for (int i = 0; i < _renderers.Length; i++) {
+            _renderers[i].material.shader = _standardShader;
+        }
+        // re-enable damage
+        _invulnerable = false;
+        _hitboxStats.SetDamage(_damage);
     }
 
     public void ToggleHitbox()
     {
         // call from attack animations to enable impacts
-        weaponHitbox.enabled = !weaponHitbox.enabled;
+        _weaponHitbox.enabled = !_weaponHitbox.enabled;
     }
 
     public void ToggleCharacterCollisions()
     {
-        controller.detectCollisions = !controller.detectCollisions;
+        _controller.detectCollisions = !_controller.detectCollisions;
     }
 
     public void GenerateExplosionField()
@@ -91,20 +110,20 @@ public class Combat : MonoBehaviour, IDamagable
     public void ToggleInvulnerable()
     {
         // call from the dodge to disable and enable hitbox
-        invulnerable = !invulnerable;
+        _invulnerable = !_invulnerable;
     }
 
     public void Damage(int damage)
     {
-        if (!invulnerable) health -= damage;
+        if (!_invulnerable) _health -= damage;
 
-        Debug.Log(health);
+        Debug.Log(_health);
     }
 
     public int MaxHealth()
     {
         // required for IDamagable
-        return maxHealth;
+        return _maxHealth;
     }
 
     void Die()

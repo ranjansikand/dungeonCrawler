@@ -30,6 +30,14 @@
                     "interactions": "Hold"
                 },
                 {
+                    "name": "Quickstep",
+                    "type": "Button",
+                    "id": "de706667-2c41-4d28-8a08-2ff9a2e4e6fe",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Tap"
+                },
+                {
                     "name": "Jump",
                     "type": "Button",
                     "id": "d473b196-bcf7-422e-94a7-2008098a341c",
@@ -318,6 +326,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Block",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3d9e7761-7941-46e1-aaaa-4724faeb170b",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quickstep",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "673e7e86-9c4b-4843-a163-48ba1dec4a05",
+                    "path": "<Gamepad>/buttonEast",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Quickstep",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

@@ -1041,8 +1041,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 221288636}
-  m_LocalRotation: {x: 0.13151467, y: -0.013400089, z: 0.003158334, w: 0.9912187}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.13151473, y: -0.01340011, z: 0.00315834, w: 0.9912187}
+  m_LocalPosition: {x: 1.6653345e-16, y: -0.0000004744758, z: 0.000000047396078}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1497382409}
@@ -2129,7 +2129,7 @@ MonoBehaviour:
     LensShift: {x: 0, y: 0}
   m_Transitions:
     m_BlendHint: 0
-    m_InheritPosition: 1
+    m_InheritPosition: 0
     m_OnCameraLive:
       m_PersistentCalls:
         m_Calls: []
@@ -2506,8 +2506,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 514807811}
-  m_LocalRotation: {x: 0.14952266, y: -0.0133404415, z: 0.0034015572, w: 0.9886624}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.018420532, y: -0.013722007, z: 0.001115824, w: 0.9997356}
+  m_LocalPosition: {x: -0.13714427, y: -2.9804525, z: 5.3018904}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 894313531}
@@ -3787,7 +3787,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.18069194, y: 0.000000022211088, z: -0.0000000040799684, w: 0.98353976}
+  m_LocalRotation: {x: 0.18069202, y: 0.0000000014105426, z: -1.8272893e-10, w: 0.98353976}
   m_LocalPosition: {x: 1, y: 6, z: -15}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -3999,7 +3999,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 8296172667639610821}
-  cameraDistance: 10
+  cameraDistance: 6.5
 --- !u!4 &1007941586
 Transform:
   m_ObjectHideFlags: 0
@@ -5663,8 +5663,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1160065583}
-  m_LocalRotation: {x: 0.11351084, y: -0.01345518, z: 0.0029147172, w: 0.99344134}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0.113510855, y: -0.013455202, z: 0.002914722, w: 0.99344134}
+  m_LocalPosition: {x: 1.6653345e-16, y: -0.0000004744758, z: 0.000000047396078}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1238095146}
@@ -7275,7 +7275,7 @@ MonoBehaviour:
     LensShift: {x: 0, y: 0}
   m_Transitions:
     m_BlendHint: 0
-    m_InheritPosition: 1
+    m_InheritPosition: 0
     m_OnCameraLive:
       m_PersistentCalls:
         m_Calls: []
@@ -8003,6 +8003,7 @@ MonoBehaviour:
   _runMultiplier: 8
   _maxJumpHeight: 4
   _maxJumpTime: 0.75
+  _maxBlockTime: 1
 --- !u!114 &1966676086
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8053,13 +8054,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e547941345756b8499dfd80e28b57c60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapon: {fileID: 494955413}
-  damage: 1
-  controller: {fileID: 1966676087}
+  _weapon: {fileID: 494955413}
+  _damage: 1
+  _controller: {fileID: 1966676087}
   explosiondmg: 1
   _tipOfWeapon: {fileID: 1222722566}
   explosionRadius: 1.5
-  maxHealth: 10
+  _maxHealth: 10
+  _parentObj: {fileID: 0}
+  _standardShader: {fileID: 46, guid: 0000000000000000f000000000000000, type: 0}
+  _blockingShader: {fileID: 4800000, guid: 2bffc50af4b1ff34cb151aa15bb9edb4, type: 3}
 --- !u!224 &1990508808 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8535347825048493636, guid: f86437e10147fdc41b40042f210cd209, type: 3}

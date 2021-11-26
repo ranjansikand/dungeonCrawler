@@ -43,6 +43,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""interactions"": ""Hold""
                 },
                 {
+                    ""name"": ""Quickstep"",
+                    ""type"": ""Button"",
+                    ""id"": ""de706667-2c41-4d28-8a08-2ff9a2e4e6fe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Tap""
+                },
+                {
                     ""name"": ""Jump"",
                     ""type"": ""Button"",
                     ""id"": ""d473b196-bcf7-422e-94a7-2008098a341c"",
@@ -333,6 +341,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""action"": ""Block"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3d9e7761-7941-46e1-aaaa-4724faeb170b"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Quickstep"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""673e7e86-9c4b-4843-a163-48ba1dec4a05"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Quickstep"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -344,6 +374,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_CharacterControls_Move = m_CharacterControls.FindAction("Move", throwIfNotFound: true);
         m_CharacterControls_Dodge = m_CharacterControls.FindAction("Dodge", throwIfNotFound: true);
         m_CharacterControls_Run = m_CharacterControls.FindAction("Run", throwIfNotFound: true);
+        m_CharacterControls_Quickstep = m_CharacterControls.FindAction("Quickstep", throwIfNotFound: true);
         m_CharacterControls_Jump = m_CharacterControls.FindAction("Jump", throwIfNotFound: true);
         m_CharacterControls_Menu = m_CharacterControls.FindAction("Menu", throwIfNotFound: true);
         m_CharacterControls_Attack = m_CharacterControls.FindAction("Attack", throwIfNotFound: true);
@@ -402,6 +433,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_CharacterControls_Move;
     private readonly InputAction m_CharacterControls_Dodge;
     private readonly InputAction m_CharacterControls_Run;
+    private readonly InputAction m_CharacterControls_Quickstep;
     private readonly InputAction m_CharacterControls_Jump;
     private readonly InputAction m_CharacterControls_Menu;
     private readonly InputAction m_CharacterControls_Attack;
@@ -415,6 +447,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Move => m_Wrapper.m_CharacterControls_Move;
         public InputAction @Dodge => m_Wrapper.m_CharacterControls_Dodge;
         public InputAction @Run => m_Wrapper.m_CharacterControls_Run;
+        public InputAction @Quickstep => m_Wrapper.m_CharacterControls_Quickstep;
         public InputAction @Jump => m_Wrapper.m_CharacterControls_Jump;
         public InputAction @Menu => m_Wrapper.m_CharacterControls_Menu;
         public InputAction @Attack => m_Wrapper.m_CharacterControls_Attack;
@@ -439,6 +472,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Run.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRun;
                 @Run.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRun;
                 @Run.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnRun;
+                @Quickstep.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnQuickstep;
+                @Quickstep.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnQuickstep;
+                @Quickstep.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnQuickstep;
                 @Jump.started -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnJump;
                 @Jump.performed -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnJump;
                 @Jump.canceled -= m_Wrapper.m_CharacterControlsActionsCallbackInterface.OnJump;
@@ -470,6 +506,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Run.started += instance.OnRun;
                 @Run.performed += instance.OnRun;
                 @Run.canceled += instance.OnRun;
+                @Quickstep.started += instance.OnQuickstep;
+                @Quickstep.performed += instance.OnQuickstep;
+                @Quickstep.canceled += instance.OnQuickstep;
                 @Jump.started += instance.OnJump;
                 @Jump.performed += instance.OnJump;
                 @Jump.canceled += instance.OnJump;
@@ -497,6 +536,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnDodge(InputAction.CallbackContext context);
         void OnRun(InputAction.CallbackContext context);
+        void OnQuickstep(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnMenu(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
