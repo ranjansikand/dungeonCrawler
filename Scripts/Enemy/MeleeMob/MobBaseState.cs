@@ -1,18 +1,18 @@
-public abstract class EnemyBaseState
+public abstract class MobBaseState
 {
     private bool _isRootState = false;
     private bool _isLeafState = false;
-    private EnemyStateMachine _ctx;
-    private EnemyStateFactory _factory;
-    private EnemyBaseState _currentSubState;
-    private EnemyBaseState _currentSuperState;
+    private MobStateMachine _ctx;
+    private MobStateFactory _factory;
+    private MobBaseState _currentSubState;
+    private MobBaseState _currentSuperState;
 
     protected bool IsRootState { set { _isRootState = value; }}
     protected bool IsLeafState { set { _isLeafState = value; }}
-    protected EnemyStateMachine Ctx { get { return _ctx; }}
-    protected EnemyStateFactory Factory {get {return _factory; }}
+    protected MobStateMachine Ctx { get { return _ctx; }}
+    protected MobStateFactory Factory {get {return _factory; }}
 
-    public EnemyBaseState(EnemyStateMachine currentContext, EnemyStateFactory enemyStateFactory) {
+    public MobBaseState(MobStateMachine currentContext, MobStateFactory enemyStateFactory) {
         _ctx = currentContext;
         _factory = enemyStateFactory;
     }
@@ -34,7 +34,7 @@ public abstract class EnemyBaseState
         }
     }
 
-    protected void SwitchState(EnemyBaseState newState) {
+    protected void SwitchState(MobBaseState newState) {
         ExitState();
 
         newState.EnterState();
@@ -45,11 +45,11 @@ public abstract class EnemyBaseState
         }
     }
 
-    protected void SetSuperState(EnemyBaseState newSuperState) {
+    protected void SetSuperState(MobBaseState newSuperState) {
         _currentSuperState = newSuperState;
     }
 
-    protected void SetSubState(EnemyBaseState newSubState) {
+    protected void SetSubState(MobBaseState newSubState) {
         _currentSubState = newSubState;
         newSubState.SetSuperState(this);
     }

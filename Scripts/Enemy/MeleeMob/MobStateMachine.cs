@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class EnemyStateMachine : MonoBehaviour, IDamagable
+public class MobStateMachine : MonoBehaviour, IDamagable
 {
     NavMeshAgent _agent;
     Animator _animator;
@@ -27,21 +27,31 @@ public class EnemyStateMachine : MonoBehaviour, IDamagable
     [SerializeField] float _sightRange;
     bool _playerDetected;
 
+    // Attacking
+    [SerializeField] float _attackRadius = 3f;
+    [SerializeField] float _chaseRadius = 10f;
+    [SerializeField] int _numberOfAttacks;
+    bool _isAttacking;
+
     // states
-    EnemyBaseState _currentState;
-    EnemyStateFactory _states;
+    MobBaseState _currentState;
+    MobStateFactory _states;
 
     public Animator Animator { get { return _animator; }}
     public NavMeshAgent Agent { get { return _agent; }}
     public Collider Collider { get {return _collider; }}
-    public EnemyBaseState CurrentState { get { return _currentState; } set { _currentState = value; }}
+    public MobBaseState CurrentState { get { return _currentState; } set { _currentState = value; }}
     public Coroutine CurrentPatrolRoutine { get { return _currentPatrolRoutine; } set { _currentPatrolRoutine = value; }}
     public Transform Target { get { return _target; } set { _target = value; }}
 
     public bool IsDead { get { return _isDead; }}
     public bool PlayerDetected { get { return _playerDetected; } set { _playerDetected = value; }}
+    public bool IsAttacking { get { return _isAttacking; } set { _isAttacking = value; }}
     public int IsAttackingHash { get { return _isAttackingHash; }}
+    public int NumberOfAttacks { get { return _numberOfAttacks; }}
     public float SightRange { get { return _sightRange; }}
+    public float AttackRadius { get { return _attackRadius; }}
+    public float ChaseRadius { get { return _chaseRadius; }}
 
     void Awake()
     {
@@ -49,12 +59,12 @@ public class EnemyStateMachine : MonoBehaviour, IDamagable
         _animator = GetComponent<Animator>();
         _collider = GetComponent<Collider>();
 
-        _isAttackingHash = Animator.StringToHash("detected");
+        _isAttackingHash = Animator.StringToHash("attack");
         _isHurtHash = Animator.StringToHash("hurt");
         _isDeadHash = Animator.StringToHash("dead");
 
-        _states = new EnemyStateFactory(this);
-        _currentState = _states.Patrol();
+        _states = new MobStateFactory(this);
+        _currentState = _states.Idle();
         _currentState.EnterState(); 
 
         StartCoroutine(CheckHealth());

@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class HitboxProcess : MonoBehaviour
 {
-    int dmg;
+    [SerializeField] int dmg = 1;
 
     public void SetDamage(int damage)
     {

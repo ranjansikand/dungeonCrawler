@@ -1,20 +1,20 @@
-public abstract class EnemyBaseState
+public abstract class MobBase
 {
     private bool _isRootState = false;
     private bool _isLeafState = false;
-    private EnemyStateMachine _ctx;
-    private EnemyStateFactory _factory;
-    private EnemyBaseState _currentSubState;
-    private EnemyBaseState _currentSuperState;
+    private MobMachine _ctx;
+    private MobFactory _factory;
+    private MobBase _currentSubState;
+    private MobBase _currentSuperState;
 
     protected bool IsRootState { set { _isRootState = value; }}
     protected bool IsLeafState { set { _isLeafState = value; }}
-    protected EnemyStateMachine Ctx { get { return _ctx; }}
-    protected EnemyStateFactory Factory {get {return _factory; }}
+    protected MobMachine Ctx { get { return _ctx; }}
+    protected MobFactory Factory {get {return _factory; }}
 
-    public EnemyBaseState(EnemyStateMachine currentContext, EnemyStateFactory enemyStateFactory) {
+    public MobBase(MobMachine currentContext, MobFactory stateFactory) {
         _ctx = currentContext;
-        _factory = enemyStateFactory;
+        _factory = stateFactory;
     }
 
     public abstract void EnterState();
@@ -34,7 +34,7 @@ public abstract class EnemyBaseState
         }
     }
 
-    protected void SwitchState(EnemyBaseState newState) {
+    protected void SwitchState(MobBase newState) {
         ExitState();
 
         newState.EnterState();
@@ -45,12 +45,19 @@ public abstract class EnemyBaseState
         }
     }
 
-    protected void SetSuperState(EnemyBaseState newSuperState) {
+    protected void SetSuperState(MobBase newSuperState) {
         _currentSuperState = newSuperState;
     }
 
-    protected void SetSubState(EnemyBaseState newSubState) {
+    protected void SetSubState(MobBase newSubState) {
         _currentSubState = newSubState;
         newSubState.SetSuperState(this);
+        newSubState.EnterState();
+    }
+
+    protected void CloseSubState()
+    {
+        _currentSubState.ExitState();
+        _currentSubState = null;
     }
 }
