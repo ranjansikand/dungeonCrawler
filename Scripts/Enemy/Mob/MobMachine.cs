@@ -27,6 +27,7 @@ public class MobMachine : MonoBehaviour, IDamagable
     int _attackCountHash;
     int _hurtHash;
     int _deadHash;
+    int _circlingHash;
 
     MobBase _currentState;
     MobFactory _states;
@@ -42,6 +43,7 @@ public class MobMachine : MonoBehaviour, IDamagable
     public Animator Animator { get { return _animator; }}
     public int AttackCountHash { get { return _attackCountHash; }}
     public int DeadHash { get { return _deadHash; }}
+    public int CirclingHash { get { return _circlingHash; }}
 
     // state-specific references
     public bool Attacking { get { return _attacking; } set { _attacking = value; }}
@@ -77,6 +79,7 @@ public class MobMachine : MonoBehaviour, IDamagable
         _attackCountHash = Animator.StringToHash("attackNumber");
         _hurtHash = Animator.StringToHash("hurt");
         _deadHash = Animator.StringToHash("dead");
+        _circlingHash = Animator.StringToHash("circling");
 
         // health
         _currentHealth = _maxHealth;

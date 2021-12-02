@@ -222,6 +222,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     void HandleRotation()
     {
+        // object that tracks camera rotation
         _reference.eulerAngles = new Vector3(0, Camera.main.transform.eulerAngles.y, 0);
 
         if (_lockedOn) {

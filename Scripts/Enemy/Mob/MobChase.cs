@@ -5,17 +5,22 @@ public class MobChase : MobBase
 {
     WaitForSeconds delay = new WaitForSeconds(0.5f);
 
-    Vector3 _pointToPlayer;
+    Vector3 _playerRelativePos;
+    float strength = 1.5f;
+
+    bool _canAttack;
 
     public MobChase(MobMachine currentContext, MobFactory stateFactory)
     : base (currentContext, stateFactory) {}
 
     public override void EnterState() {
+        _canAttack = false;
         Ctx.StartCoroutine(IHandlePursuit());
     }
 
     public override void UpdateState() {
         CheckSwitchStates();
+        HandleRotation();
     }
 
     public override void ExitState() {
@@ -24,8 +29,7 @@ public class MobChase : MobBase
     }
 
     public override void CheckSwitchStates() {
-        if (Vector3.Distance(Ctx.Target.position, Ctx.transform.position) < Ctx.AttackRange) {
-            // Check if anything is blocking sightline
+        if (_canAttack) {
             SwitchState(Factory.Attack());
         }
     }
@@ -38,17 +42,26 @@ public class MobChase : MobBase
             yield return delay;
 
             if (Ctx.Target != null) {
-                float distance = Vector3.Distance(Ctx.Target.position, Ctx.transform.position);
+                _playerRelativePos = Ctx.transform.InverseTransformPoint(Ctx.Target.position);
 
-                if (distance > Ctx.ChaseRange || distance < Ctx.AttackRange) {
-                    // if player is too far away or too close
+                if (_playerRelativePos.magnitude > Ctx.ChaseRange) {
+                    // if player is too far away
                     Ctx.Agent.SetDestination(Ctx.transform.position);
                     Ctx.Target = null;
-                } else {
-                    _pointToPlayer = (Ctx.Target.position - Ctx.transform.position).normalized;
+                }
+                else if (_playerRelativePos.magnitude < Ctx.AttackRange) {
+                    _canAttack = true;
+                }
+                else {
                     Ctx.Agent.SetDestination(Ctx.Target.position);
                 }
             }
         }
+    }
+
+    void HandleRotation() {
+        Quaternion targetRotation = Quaternion.LookRotation (Ctx.Target.position - Ctx.transform.position);
+        float str = Mathf.Min (strength * Time.deltaTime, 1);
+        Ctx.transform.rotation = Quaternion.Slerp (Ctx.transform.rotation, targetRotation, str);
     }
 }

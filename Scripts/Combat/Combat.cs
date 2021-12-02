@@ -1,9 +1,11 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Combat : MonoBehaviour, IDamagable
 {
+    [SerializeField] Image _healthbar;
+
     [Header("General combat stats")]
     [SerializeField] GameObject _weapon;
     [SerializeField] int _damage = 1;
@@ -11,6 +13,7 @@ public class Combat : MonoBehaviour, IDamagable
     
     Collider _weaponHitbox;
     HitboxProcess _hitboxStats;
+    ParticleSystem _weaponSlash;
 
 
     [Header("Explosions")]
@@ -42,6 +45,7 @@ public class Combat : MonoBehaviour, IDamagable
 
         _weaponHitbox = _weapon.GetComponent<Collider>();
         _hitboxStats = _weapon.GetComponent<HitboxProcess>();
+        _weaponSlash = _weapon.GetComponentInChildren<ParticleSystem>();
 
         _renderers = GetComponentsInChildren<Renderer>();
 
@@ -49,6 +53,7 @@ public class Combat : MonoBehaviour, IDamagable
         PlayerStateMachine.onBlockEnded += OnBlockEnded;
 
         _hitboxStats.SetDamage(_damage);
+        UpdateHealthbar();
         StartCoroutine(CheckForDeath());
     }
 
@@ -84,6 +89,7 @@ public class Combat : MonoBehaviour, IDamagable
     {
         // call from attack animations to enable impacts
         _weaponHitbox.enabled = !_weaponHitbox.enabled;
+        if (_weaponHitbox.enabled) _weaponSlash.Play();
     }
 
     public void ToggleCharacterCollisions()
@@ -117,7 +123,14 @@ public class Combat : MonoBehaviour, IDamagable
     {
         if (!_invulnerable) _health -= damage;
 
+        UpdateHealthbar();
+
         Debug.Log(_health);
+    }
+
+    void UpdateHealthbar()
+    {
+        _healthbar.fillAmount = 1.0f  * _health / _maxHealth;
     }
 
     public int MaxHealth()

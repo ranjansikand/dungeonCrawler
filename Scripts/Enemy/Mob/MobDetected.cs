@@ -15,8 +15,6 @@ public class MobDetected : MobBase
 
     public override void UpdateState() {
         CheckSwitchStates();
-
-        if (Ctx.Target != null) Ctx.transform.LookAt(Ctx.Target.position);
     }
 
     public override void ExitState() {

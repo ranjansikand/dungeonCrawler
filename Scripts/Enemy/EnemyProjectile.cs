@@ -21,8 +21,6 @@ public class EnemyProjectile : MonoBehaviour
         var hitTarget = other.GetComponent<IDamagable>();
         hitTarget?.Damage(damage);
 
-        // trigger effects like blood splatter
-
         Invoke(nameof(Delete), 0.05f);
     }
 

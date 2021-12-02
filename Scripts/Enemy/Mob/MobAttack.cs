@@ -26,7 +26,7 @@ public class MobAttack : MobBase
     }
 
     public override void CheckSwitchStates() {
-        if (Ctx.Attacking) {
+        if (!Ctx.Attacking) {
             SwitchState(Factory.Chase());
         }
     }
