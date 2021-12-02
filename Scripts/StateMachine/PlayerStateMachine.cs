@@ -36,6 +36,7 @@ public class PlayerStateMachine : MonoBehaviour
     bool _isJumping = false;
     int _isJumpingHash;
     int _jumpCountHash;
+    int _isFallingHash;
     bool _requireNewJumpPress = false;
     int _jumpCount = 0;
     Dictionary<int, float> _initialJumpVelocities = new Dictionary<int, float>();
@@ -100,6 +101,7 @@ public class PlayerStateMachine : MonoBehaviour
     public int AttackCount { get { return _attackCount; } set { _attackCount = value; }}
     public int AttackCountHash { get { return _attackCountHash; }}
     public int IsDodgingHash { get { return _dodgingHash; }}
+    public int IsFallingHash { get { return _isFallingHash; }}
     public int DirXHash { get { return _dirXHash; }}
     public int DirYHash { get { return _dirYHash; }}
     public bool IsMovementPressed { get { return _isMovementPressed; }}
@@ -142,6 +144,7 @@ public class PlayerStateMachine : MonoBehaviour
         _isWalkingHash = Animator.StringToHash("isWalking");
         _isRunningHash = Animator.StringToHash("isRunning");
         _isJumpingHash = Animator.StringToHash("isJumping");
+        _isFallingHash = Animator.StringToHash("isFalling");
         _jumpCountHash = Animator.StringToHash("jumpCount");
         _attackingHash = Animator.StringToHash("attacking");
         _attackCountHash = Animator.StringToHash("attackCount");

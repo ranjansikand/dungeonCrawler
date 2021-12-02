@@ -7,6 +7,7 @@ public class MobMachine : MonoBehaviour, IDamagable
     // Components
     NavMeshAgent _agent;
     Animator _animator;
+    Collider _bodyCollider;
 
     // Transform of the character's head for vision detection
     [SerializeField] Transform _eyes;
@@ -69,6 +70,7 @@ public class MobMachine : MonoBehaviour, IDamagable
         // Find components
         _agent = GetComponent<NavMeshAgent>();
         _animator = GetComponent<Animator>();
+        _bodyCollider = GetComponent<Collider>();
 
         // Initialize State Behaviour
         _states = new MobFactory(this);
@@ -123,6 +125,7 @@ public class MobMachine : MonoBehaviour, IDamagable
             if (_currentHealth <= 0) 
             {
                 _isDead = true; 
+                _bodyCollider.enabled = false;
             }
                
             yield return delay;

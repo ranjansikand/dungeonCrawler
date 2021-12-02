@@ -51,4 +51,9 @@ public class PlayerStateFactory
     {
         return new PlayerBlockState(_context, this);
     }
+
+    public PlayerBaseState Falling()
+    {
+        return new PlayerFallState(_context, this);
+    }
 }

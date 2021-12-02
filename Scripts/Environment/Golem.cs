@@ -1,43 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
+// Script to make golems move
 using UnityEngine;
-using UnityEngine.AI;
 
 public class Golem : MonoBehaviour, IDamagable
 {
-    [SerializeField] Vector3[] _waypoints;
-    int _previousWaypoint = -1;
+    Animator _animator;
+    int _walkingHash;
 
-    WaitForSeconds _delay = new WaitForSeconds(0.5f);
-    bool _walking = false;
+    [SerializeField] Vector3 _direction;
+    [SerializeField] float _speed;
+
+    bool _walk = false;
+
+    void Start()
+    {
+        _animator = GetComponent<Animator>();
+        _walkingHash = Animator.StringToHash("Walk");
+
+        _direction = transform.forward;
+    }
+
+    void Update()
+    {
+        if (_walk) {
+            if (Physics.Raycast(transform.position + Vector3.up, _direction, 1.5f)) {
+                _walk = false;
+                _animator.SetBool(_walkingHash, false);
+            } else {
+                transform.position += _direction * _speed * Time.deltaTime;
+            }
+        }
+    }
 
     public void Damage(int damage) {
-        _walking = true;
+        // start walking in the opposite direction
+        _animator.SetBool(_walkingHash, true);
+        _walk = true;
 
-        if (_previousWaypoint < _waypoints.Length) {
-            _previousWaypoint++;
-        } else {
-            _previousWaypoint = 0;
-        }
-        
-       StartCoroutine(ICheckPath());
+        FaceNewDirection();
     }
 
     public int MaxHealth() { return 0; }
 
-    IEnumerator ICheckPath()
-    {
-        while (_walking) {
-            if (Physics.Raycast(transform.position, transform.forward, 2f)) {
-                Vector3.MoveTowards(transform.position, _waypoints[_previousWaypoint], 0.5f);
-            }
-
-            if (Vector3.Distance(transform.position, _waypoints[_previousWaypoint]) < 1) {
-                _walking = false;
-                StopCoroutine(ICheckPath());
-            }
-
-            yield return _delay;
-        }
+    void FaceNewDirection() {
+        _direction *= -1;
+        transform.forward = _direction;
     }
 }

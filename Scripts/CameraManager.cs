@@ -41,7 +41,7 @@ public class CameraManager : MonoBehaviour
 
     IEnumerator ICheckTarget() {
         while (true) {
-            if (target == null) RevertToOrbit();
+            if (target == null || Vector3.Distance(target.position, transform.position) > 25) RevertToOrbit();
             yield return delay;
         }
     }
@@ -61,10 +61,20 @@ public class CameraManager : MonoBehaviour
 
     void SwitchToLockOn()
     {
-        RaycastHit hit;
-        if (Physics.SphereCast(player.position, 5f, transform.forward, out hit, 24f, layerMask))
-        {
-            target = hit.collider.transform;
+        Collider[] results = new Collider[25];
+        int hits = Physics.OverlapSphereNonAlloc(player.position, 10f, results, layerMask);
+
+        if (hits > 0){
+            float magnitude = 100;
+            for (int i = 0; i < hits; i++) {
+                // check for closest enemy to the player
+                Vector3 thisPos = player.InverseTransformPoint(results[i].transform.position);
+                if (thisPos.magnitude < magnitude) {
+                    target = results[i].transform;
+                    magnitude = thisPos.magnitude;
+                }
+            }
+            
             Debug.Log("Found target: " + target.name);
 
             // update lock Target Group

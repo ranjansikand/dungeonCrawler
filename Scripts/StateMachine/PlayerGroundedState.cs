@@ -32,8 +32,10 @@ public class PlayerGroundedState : PlayerBaseState
     }
 
     public override void CheckSwitchStates() {
-        if ((Ctx.IsJumpPressed && !Ctx.RequireNewJumpPress) || !Ctx.IsGrounded) {
+        if ((Ctx.IsJumpPressed && !Ctx.RequireNewJumpPress)) {
             SwitchState(Factory.Jump());
+        } else if (!Ctx.IsGrounded) {
+            SwitchState(Factory.Falling());
         }
     }
 }
