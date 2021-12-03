@@ -1,9 +1,22 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerFallState : PlayerBaseState
 {
+    WaitForSeconds _delay = new WaitForSeconds(0.25f);
+
+    IEnumerator IFallToDeath()
+    {
+        yield return new WaitForSeconds(1);
+
+        int fallDamage = 0;
+        while (!Ctx.IsGrounded) {
+            yield return _delay;
+            fallDamage += 1;
+        }
+        Ctx.GetComponent<Combat>().Damage(fallDamage);
+    }
+
     public PlayerFallState(PlayerStateMachine currentContext, PlayerStateFactory playerStateFactory) 
     : base (currentContext, playerStateFactory) {
         IsRootState = true;
@@ -13,6 +26,7 @@ public class PlayerFallState : PlayerBaseState
     public override void EnterState() {
         Ctx.IsGrounded = false;
         Ctx.Animator.SetBool(Ctx.IsFallingHash, true);
+        Ctx.StartCoroutine(IFallToDeath());
     }
 
     public override void UpdateState() {
@@ -22,6 +36,7 @@ public class PlayerFallState : PlayerBaseState
 
     public override void ExitState() {
         Ctx.Animator.SetBool(Ctx.IsFallingHash, false);
+        Ctx.StopCoroutine(IFallToDeath());
     }
 
     public override void InitializeSubState() {

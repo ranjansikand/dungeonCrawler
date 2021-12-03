@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using Cinemachine;
 
@@ -29,6 +30,7 @@ public class CameraManager : MonoBehaviour
 
     // private variables
     Transform target;
+    IDamagable targetHit;
     PlayerStateMachine playerStateMachine;
     int layerMask = 1 << 15;
     WaitForSeconds delay = new WaitForSeconds(0.1f);
@@ -41,7 +43,7 @@ public class CameraManager : MonoBehaviour
 
     IEnumerator ICheckTarget() {
         while (true) {
-            if (target == null || Vector3.Distance(target.position, transform.position) > 25) RevertToOrbit();
+            if (targetHit == null || targetHit?.CurrentHealth() <= 0) RevertToOrbit();
             yield return delay;
         }
     }
@@ -75,7 +77,7 @@ public class CameraManager : MonoBehaviour
                 }
             }
             
-            Debug.Log("Found target: " + target.name);
+            targetHit = target.GetComponent<IDamagable>();
 
             // update lock Target Group
             CinemachineTargetGroup.Target updatedTarget; 

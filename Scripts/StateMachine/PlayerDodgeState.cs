@@ -16,9 +16,11 @@ public class PlayerDodgeState : PlayerBaseState
     public override void UpdateState() {
         CheckSwitchStates();
 
-        Ctx.AppliedMovement = Ctx.Reference.forward * dodgeDirection.y * Ctx.RunMultiplier
-                + Ctx.Reference.right * dodgeDirection.x * Ctx.RunMultiplier + 
-                new Vector3(0, Ctx.AppliedMovementY, 0);
+        if (Ctx.IsDodging) {
+            Ctx.AppliedMovement = Ctx.Reference.forward * dodgeDirection.y * Ctx.RunMultiplier
+                    + Ctx.Reference.right * dodgeDirection.x * Ctx.RunMultiplier + 
+                    new Vector3(0, Ctx.AppliedMovementY, 0);
+        }
     }
 
     public override void ExitState() {}

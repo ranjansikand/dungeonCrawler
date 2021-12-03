@@ -1,4 +1,6 @@
-using UnityEngine;
+// State that controls enemy death
+// Prevents erroneous post-death behaviors
+
 public class MobDead : MobBase
 {
     public MobDead(MobMachine currentContext, MobFactory stateFactory)
@@ -7,7 +9,6 @@ public class MobDead : MobBase
     }
 
     public override void EnterState() {
-        Debug.Log("DEAD");
         Ctx.Target = null;
         Ctx.Animator.SetTrigger(Ctx.DeadHash);
     }

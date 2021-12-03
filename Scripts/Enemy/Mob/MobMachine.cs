@@ -85,7 +85,6 @@ public class MobMachine : MonoBehaviour, IDamagable
 
         // health
         _currentHealth = _maxHealth;
-        StartCoroutine(IHealthChecker());
     }
 
     void Update()
@@ -108,27 +107,26 @@ public class MobMachine : MonoBehaviour, IDamagable
     // Health functions
     public void Damage(int damage) {
         if (!_isRecovering) {
+            _isRecovering = true;
             _currentHealth -= damage;
+            Debug.Log("Damaged, " + _currentHealth);
 
-            if (_currentHealth > 0 && damage > _hurtThreshold) {
-                Animator.SetTrigger(_hurtHash);
-            }
-        }
-    }
-
-    public int MaxHealth() {
-        return _maxHealth;
-    }
-
-    IEnumerator IHealthChecker() {
-        while (!_isDead) {
-            if (_currentHealth <= 0) 
-            {
+            if (_currentHealth > 0) {
+                if (damage > _hurtThreshold) Animator.SetTrigger(_hurtHash);
+            } else {
                 _isDead = true; 
                 _bodyCollider.enabled = false;
             }
-               
-            yield return delay;
+            Invoke("EndRecovery", 0.25f);
         }
+    }
+
+    void EndRecovery()
+    {
+        _isRecovering = false;
+    }
+
+    public int CurrentHealth() {
+        return _currentHealth;
     }
 }

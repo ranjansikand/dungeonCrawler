@@ -89,7 +89,9 @@ public class Combat : MonoBehaviour, IDamagable
     {
         // call from attack animations to enable impacts
         _weaponHitbox.enabled = !_weaponHitbox.enabled;
-        if (_weaponHitbox.enabled) _weaponSlash.Play();
+
+        // toggle effect
+        if (_weaponHitbox.enabled) {_weaponSlash.Play();}
     }
 
     public void ToggleCharacterCollisions()
@@ -133,10 +135,10 @@ public class Combat : MonoBehaviour, IDamagable
         _healthbar.fillAmount = 1.0f  * _health / _maxHealth;
     }
 
-    public int MaxHealth()
+    public int CurrentHealth()
     {
         // required for IDamagable
-        return _maxHealth;
+        return _health;
     }
 
     void Die()

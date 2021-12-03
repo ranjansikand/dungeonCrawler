@@ -1,7 +1,7 @@
 // Script to make golems move
 using UnityEngine;
 
-public class Golem : MonoBehaviour, IDamagable
+public class Golem : MonoBehaviour, IDamagable, IRotatable
 {
     Animator _animator;
     int _walkingHash;
@@ -22,7 +22,7 @@ public class Golem : MonoBehaviour, IDamagable
     void Update()
     {
         if (_walk) {
-            if (Physics.Raycast(transform.position + Vector3.up, _direction, 1.5f)) {
+            if (Physics.SphereCast(new Ray(transform.position + Vector3.up, _direction), .1f, 1.5f)) {
                 _walk = false;
                 _animator.SetBool(_walkingHash, false);
             } else {
@@ -39,10 +39,16 @@ public class Golem : MonoBehaviour, IDamagable
         FaceNewDirection();
     }
 
-    public int MaxHealth() { return 0; }
+    public int CurrentHealth() { return 0; }
 
     void FaceNewDirection() {
         _direction *= -1;
         transform.forward = _direction;
+    }
+
+    public void TurnAxis(int rotation)
+    {
+        transform.Rotate(new Vector3(0, rotation, 0));
+        _direction = transform.forward;
     }
 }

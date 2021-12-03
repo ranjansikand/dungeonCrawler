@@ -8,9 +8,6 @@ public class MobSearching : MobBase
 {
     static Collider[] targetsBuffer = new Collider[100];
 
-    // Fields of view
-    float _viewAngle = 100f;
-
     public MobSearching(MobMachine currentContext, MobFactory stateFactory)
     : base (currentContext, stateFactory) {
         IsRootState = true;
@@ -33,7 +30,7 @@ public class MobSearching : MobBase
         if (Ctx.IsDead) {
             SwitchState(Factory.Dead());
         }
-        else if (AcquireTarget()) {
+        else if (IsTargetVisible()) {
             SwitchState(Factory.Detected());
         }
     }
@@ -60,24 +57,19 @@ public class MobSearching : MobBase
         return false;
     }
 
-    void FindVisibleTargets()
+    bool IsTargetVisible()
     {
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(Ctx.transform.position, Ctx.SightRange, Ctx.LayerMask);
+        if (AcquireTarget()) {
+            Vector3 direction = Ctx.Target.position - Ctx.transform.position;
 
-        for (int i = 0; i < targetsInViewRadius.Length; i++) {
-            Transform target = targetsInViewRadius[i].transform;
-            Vector3 dirToTarget = (target.position - Ctx.Eyes.position).normalized;
-
-            if (Vector3.Angle(Ctx.transform.forward, dirToTarget) < _viewAngle/2) {
-                float distToTarget = Vector3.Distance(Ctx.Eyes.position, target.position);
-
-                if (!Physics.Raycast(Ctx.Eyes.position, dirToTarget, distToTarget, 1 << 6)) {
-                    Ctx.Target = target;
-                    return;
-                }
+            if (!Physics.Raycast(Ctx.transform.position + Vector3.up, direction, (0.9f * direction.magnitude))) {
+                return true;
+            }
+            else {
+                Ctx.Target = null;
             }
         }
 
-        Ctx.Target = null;
+        return false;
     }
 }
