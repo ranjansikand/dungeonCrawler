@@ -23,6 +23,7 @@ public class MobAttack : MobBase
 
     public override void ExitState() {
         Ctx.StopCoroutine(IAutoReset());
+        Ctx.Animator.SetInteger(Ctx.AttackCountHash, 0);
     }
 
     public override void CheckSwitchStates() {

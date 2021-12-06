@@ -23,8 +23,13 @@ public class CameraManager : MonoBehaviour
     #endregion
 
     // public variables
+    [Header("Transforms")]
     public Transform player;
-    public GameObject orbitCamera, lockOnCamera;
+    public Transform lockTarget;
+    [Header("Cameras")]
+    public GameObject orbitCamera;
+    public GameObject lockOnCamera;
+    [Header("Cinemachine variables")]
     public CinemachineTargetGroup targetGroup;
     public float weight = 0.4f, radius = 2f;
 
@@ -77,6 +82,7 @@ public class CameraManager : MonoBehaviour
                 }
             }
             
+            // to check if target is dead
             targetHit = target.GetComponent<IDamagable>();
 
             // update lock Target Group
@@ -86,6 +92,9 @@ public class CameraManager : MonoBehaviour
             updatedTarget.radius = radius;
 
             targetGroup.m_Targets.SetValue(updatedTarget, 1);
+
+            // update camera position before switching feeds
+            lockOnCamera.transform.position = lockTarget.position;
 
             // update cameras on success
             lockOnCamera.SetActive(true);
@@ -102,5 +111,6 @@ public class CameraManager : MonoBehaviour
         lockOnCamera.SetActive(false);
 
         target = null;
+        playerStateMachine.Target = null;
     }
 }

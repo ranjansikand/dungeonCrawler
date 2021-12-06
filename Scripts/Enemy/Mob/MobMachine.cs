@@ -123,6 +123,7 @@ public class MobMachine : MonoBehaviour, IDamagable
 
     void EndRecovery()
     {
+        // called by damage coroutine
         _isRecovering = false;
     }
 
