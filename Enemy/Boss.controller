@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: 6c4f95ca2d345314aa26717c748c13ee, type: 2}
+  m_Motion: {fileID: 7400000, guid: dd63d5380fc16e94f961ca1c64b6707d, type: 2}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -268,7 +268,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Mob
+  m_Name: Boss
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: move
@@ -663,10 +663,10 @@ AnimatorStateMachine:
     m_Position: {x: 330, y: 380, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4117003012098910195}
-    m_Position: {x: 670, y: 120, z: 0}
+    m_Position: {x: 540, y: 160, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -8353699869135412353}
-    m_Position: {x: 670, y: 190, z: 0}
+    m_Position: {x: 670, y: 220, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7048617651449232216}
     m_Position: {x: 720, y: 320, z: 0}

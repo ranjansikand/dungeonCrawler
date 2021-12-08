@@ -118,6 +118,7 @@ public class PlayerStateMachine : MonoBehaviour
     public bool IsDead { get {return isDead;} set {isDead = value; }}
     public bool IsBlockPressed { get { return _isBlockPressed; } set { _isBlockPressed = value; }}
     public bool IsBlocking { get { return _isBlocking; } set { _isBlocking = value; }}
+    public bool IsLockedOn { set { _lockedOn = value; }}
     public float GroundedGravity { get { return _groundedGravity; }}
     public float CurrentMovementY { get { return _currentMovement.y; } set { _currentMovement.y = value; }}
     public float AppliedMovementX { get { return _appliedMovement.x; } set { _appliedMovement.x = value; }}

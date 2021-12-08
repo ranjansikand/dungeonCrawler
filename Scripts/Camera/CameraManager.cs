@@ -25,10 +25,14 @@ public class CameraManager : MonoBehaviour
     // public variables
     [Header("Transforms")]
     public Transform player;
-    public Transform lockTarget;
+
     [Header("Cameras")]
     public GameObject orbitCamera;
     public GameObject lockOnCamera;
+
+    [Header("Reticle")]
+    public TrackTarget reticle;
+    
     [Header("Cinemachine variables")]
     public CinemachineTargetGroup targetGroup;
     public float weight = 0.4f, radius = 2f;
@@ -86,20 +90,16 @@ public class CameraManager : MonoBehaviour
             targetHit = target.GetComponent<IDamagable>();
 
             // update lock Target Group
-            CinemachineTargetGroup.Target updatedTarget; 
-            updatedTarget.target = target;
-            updatedTarget.weight = weight;
-            updatedTarget.radius = radius;
-
-            targetGroup.m_Targets.SetValue(updatedTarget, 1);
-
-            // update camera position before switching feeds
-            lockOnCamera.transform.position = lockTarget.position;
+            lockOnCamera.GetComponent<CinemachineVirtualCamera>().m_LookAt = target;
 
             // update cameras on success
             lockOnCamera.SetActive(true);
             orbitCamera.SetActive(false);
             StartCoroutine(ICheckTarget());
+
+            // update reticle
+            reticle.gameObject.SetActive(true);
+            reticle.Target = target;
         }
     }
 
@@ -111,6 +111,10 @@ public class CameraManager : MonoBehaviour
         lockOnCamera.SetActive(false);
 
         target = null;
-        playerStateMachine.Target = null;
+        playerStateMachine.IsLockedOn = false;
+
+        // update reticle
+        reticle.Target = null;
+        reticle.gameObject.SetActive(false);
     }
 }
