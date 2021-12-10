@@ -11,10 +11,10 @@ public class MobDead : MobBase
     public override void EnterState() {
         Ctx.Target = null;
         Ctx.Animator.SetTrigger(Ctx.DeadHash);
+        Ctx.Agent.SetDestination(Ctx.transform.position);
     }
 
-    public override void UpdateState() {
-    }
+    public override void UpdateState() {}
 
     public override void ExitState() {}
 

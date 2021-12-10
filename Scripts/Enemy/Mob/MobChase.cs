@@ -4,17 +4,15 @@ using UnityEngine;
 public class MobChase : MobBase
 {
     WaitForSeconds delay = new WaitForSeconds(0.5f);
-
-    Vector3 _playerRelativePos;
     float strength = 1.5f;
 
-    bool _canAttack;
+    bool _targetInRange;
 
     public MobChase(MobMachine currentContext, MobFactory stateFactory)
     : base (currentContext, stateFactory) {}
 
     public override void EnterState() {
-        _canAttack = false;
+        _targetInRange = false;
         Ctx.StartCoroutine(IHandlePursuit());
     }
 
@@ -29,7 +27,7 @@ public class MobChase : MobBase
     }
 
     public override void CheckSwitchStates() {
-        if (_canAttack) {
+        if (_targetInRange) {
             SwitchState(Factory.Attack());
         }
     }
@@ -38,22 +36,18 @@ public class MobChase : MobBase
 
     IEnumerator IHandlePursuit()
     {
-        while (true) {
+        while (!Ctx.Attacking) {
             yield return delay;
 
             if (Ctx.Target != null) {
-                _playerRelativePos = Ctx.transform.InverseTransformPoint(Ctx.Target.position);
+                Ctx.Agent.SetDestination(Ctx.Target.position);
 
-                if (_playerRelativePos.magnitude > Ctx.ChaseRange) {
+                if (Ctx.Agent.remainingDistance > Ctx.ChaseRange) {
                     // if player is too far away
-                    Ctx.Agent.SetDestination(Ctx.transform.position);
                     Ctx.Target = null;
                 }
-                else if (_playerRelativePos.magnitude < Ctx.AttackRange) {
-                    _canAttack = true;
-                }
-                else {
-                    Ctx.Agent.SetDestination(Ctx.Target.position);
+                else if (Ctx.Agent.remainingDistance < Ctx.AttackRange) {
+                    _targetInRange = true;
                 }
             }
         }

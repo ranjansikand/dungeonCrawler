@@ -7219,9 +7219,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_StateMachine: {fileID: -5416919145856072241}
     m_Position: {x: -260, y: 640, z: 0}
-  - serializedVersion: 1
-    m_StateMachine: {fileID: -6001963618768168323}
-    m_Position: {x: 460, y: 470, z: 0}
   m_AnyStateTransitions:
   - {fileID: 7421694213589531443}
   - {fileID: -7174522841482178613}

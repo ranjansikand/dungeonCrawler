@@ -10,7 +10,7 @@ public class MobDetected : MobBase
     }
 
     public override void EnterState() {
-        // Play any detected effects or animations
+        Ctx.Status.UpdateSprite(Ctx.Alarmed);
     }
 
     public override void UpdateState() {

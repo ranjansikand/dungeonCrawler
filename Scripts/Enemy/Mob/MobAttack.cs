@@ -1,20 +1,14 @@
-using System.Collections;
 using UnityEngine;
 
 public class MobAttack : MobBase
 {
-    IEnumerator IAutoReset()
-    {
-        yield return new WaitForSeconds(2f);
-
-        if (Ctx.Attacking) Ctx.Attacking = false;
-    }
     public MobAttack(MobMachine currentContext, MobFactory stateFactory)
     : base (currentContext, stateFactory) {}
 
     public override void EnterState() {
-        Ctx.StartCoroutine(IAutoReset());
         HandleAttack();
+
+        Ctx.Agent.SetDestination(Ctx.transform.position);
     }
 
     public override void UpdateState() {
@@ -22,13 +16,12 @@ public class MobAttack : MobBase
     }
 
     public override void ExitState() {
-        Ctx.StopCoroutine(IAutoReset());
         Ctx.Animator.SetInteger(Ctx.AttackCountHash, 0);
     }
 
     public override void CheckSwitchStates() {
         if (!Ctx.Attacking) {
-            SwitchState(Factory.Chase());
+            SwitchState(Factory.Circle());
         }
     }
 

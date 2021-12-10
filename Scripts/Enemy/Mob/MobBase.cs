@@ -30,7 +30,7 @@ public abstract class MobBase
     public void UpdateStates() {
         UpdateState();
         if (_currentSubState != null) {
-            _currentSubState.UpdateStates();
+            _currentSubState.UpdateState();
         }
     }
 
@@ -39,9 +39,11 @@ public abstract class MobBase
 
         newState.EnterState();
         if (_isRootState) {
+            _currentSuperState = null;
             _ctx.CurrentState = newState;
         } else if (_currentSuperState != null) {
             _currentSuperState.SetSubState(newState);
+            _currentSubState = null;
         }
     }
 

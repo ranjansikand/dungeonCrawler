@@ -41,4 +41,14 @@ public class MobFactory
     {
         return new MobDead(_context, this);
     }
+
+    public MobBase Retreat()
+    {
+        return new MobRetreat(_context, this);
+    }
+
+    public MobBase Circle()
+    {
+        return new MobCircling(_context, this);
+    }
 }

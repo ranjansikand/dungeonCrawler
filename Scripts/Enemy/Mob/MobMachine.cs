@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -21,8 +20,15 @@ public class MobMachine : MonoBehaviour, IDamagable
 
     [SerializeField] float _sightRange;
     [SerializeField] float _chaseRange;
+    [SerializeField] float _circleRange;
     [SerializeField] float _attackRange;
     [SerializeField] int _numberOfAttacks;
+
+    // Detection feedbacks
+    [Header("Sprites")]
+    [SerializeField] StatusSprite _status;
+    [SerializeField] Sprite _confused;
+    [SerializeField] Sprite _alarmed;
 
     // animation hashes
     int _attackCountHash;
@@ -37,8 +43,12 @@ public class MobMachine : MonoBehaviour, IDamagable
     public NavMeshAgent Agent { get { return _agent; }}
     public MobBase CurrentState { get { return _currentState; } set { _currentState = value; }}
     public Transform Target { get { return _target; } set { _target = value; }}
-    public Transform Eyes { get { return _eyes; }}
     public bool IsDead { get { return _isDead; }}
+
+    // Sprites
+    public StatusSprite Status { get { return _status; }}
+    public Sprite Confused { get { return _confused; }}
+    public Sprite Alarmed { get { return _alarmed; }}
 
     // animation references
     public Animator Animator { get { return _animator; }}
@@ -52,6 +62,7 @@ public class MobMachine : MonoBehaviour, IDamagable
     public int NumberOfAttacks { get { return _numberOfAttacks; }}
     public float SightRange { get { return _sightRange; }}
     public float ChaseRange { get { return _chaseRange; }}
+    public float CircleRange { get { return _circleRange; }}
     public float AttackRange { get { return _attackRange; }}
 
 

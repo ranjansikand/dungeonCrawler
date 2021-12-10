@@ -167,7 +167,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  lockTarget: {fileID: 0}
   orbitCamera: {fileID: 2440329055485711069}
   lockOnCamera: {fileID: 2440329055715072977}
   reticle: {fileID: 2440329056086892305}
@@ -743,7 +742,7 @@ MonoBehaviour:
     Dutch: 0
     LensShift: {x: 0, y: 0}
   m_Transitions:
-    m_BlendHint: 3
+    m_BlendHint: 2
     m_InheritPosition: 0
     m_OnCameraLive:
       m_PersistentCalls:
