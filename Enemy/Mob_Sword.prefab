@@ -1118,7 +1118,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.3301887, g: 0.3301887, b: 0.3301887, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -3117,10 +3117,11 @@ MonoBehaviour:
   _attackRange: 2
   _numberOfAttacks: 3
   _status: {fileID: 9169990953414590745}
-  _confused: {fileID: 0}
-  _alarmed: {fileID: -7042905765396099041, guid: 914cbe1d1b05cf54591fee7cf9f4dad7, type: 3}
-  _maxHealth: 2
-  _hurtThreshold: 1
+  _confused: {fileID: 21300000, guid: f6f5faaece8aebd448233e1da997ed3b, type: 3}
+  _alarmed: {fileID: 21300000, guid: a4eeb9c26c3c16e469eb5b1039512d80, type: 3}
+  _maxHealth: 4
+  _hurtThreshold: 0
+  _bloodSplatter: {fileID: 7649583977474669319, guid: 719cd058685137440b6ad8d174c783a8, type: 3}
 --- !u!114 &3094070285353106908
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -117,4 +117,15 @@ public class CameraManager : MonoBehaviour
         reticle.Target = null;
         reticle.gameObject.SetActive(false);
     }
+
+    // camera shake
+    public void ShakeCamera(float intensity, float time)
+    {
+        CinemachineBasicMultiChannelPerlin cinemachineBasicMultiChannelPerlin = 
+            orbitCamera.GetComponent<CinemachineVirtualCamera>().
+            GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+
+        cinemachineBasicMultiChannelPerlin.m_AmplitudeGain = intensity;
+
+    }
 }
