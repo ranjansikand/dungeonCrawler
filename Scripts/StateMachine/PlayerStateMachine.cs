@@ -9,7 +9,8 @@ public class PlayerStateMachine : MonoBehaviour
     Animator _animator;
     PlayerInput _playerInput;
 
-    int _isWalkingHash;    int _isRunningHash;
+    int _isWalkingHash;    
+    int _isRunningHash;
 
     // movement variables
     Vector2 _currentMovementInput;

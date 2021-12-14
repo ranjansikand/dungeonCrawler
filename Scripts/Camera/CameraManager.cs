@@ -33,9 +33,6 @@ public class CameraManager : MonoBehaviour
     [Header("Reticle")]
     public TrackTarget reticle;
     
-    [Header("Cinemachine variables")]
-    public CinemachineTargetGroup targetGroup;
-    public float weight = 0.4f, radius = 2f;
 
     // private variables
     Transform target;
@@ -43,11 +40,19 @@ public class CameraManager : MonoBehaviour
     PlayerStateMachine playerStateMachine;
     int layerMask = 1 << 15;
     WaitForSeconds delay = new WaitForSeconds(0.1f);
+    
+    // Animator
+    Animator animator;
+    int lockOnHash;
 
     void Start()
     {
         if (player == null) player = GameObject.FindGameObjectWithTag("Player").transform;
+
         playerStateMachine = player.gameObject.GetComponent<PlayerStateMachine>();
+        animator = player.gameObject.GetComponent<Animator>();
+
+        lockOnHash = Animator.StringToHash("lockedOn");
     }
 
     IEnumerator ICheckTarget() {
@@ -100,6 +105,9 @@ public class CameraManager : MonoBehaviour
             // update reticle
             reticle.gameObject.SetActive(true);
             reticle.Target = target;
+
+            // update animation
+            animator.SetBool(lockOnHash, true);
         }
     }
 
@@ -116,6 +124,9 @@ public class CameraManager : MonoBehaviour
         // update reticle
         reticle.Target = null;
         reticle.gameObject.SetActive(false);
+
+        // update animation
+        animator.SetBool(lockOnHash, false);
     }
 
     // camera shake

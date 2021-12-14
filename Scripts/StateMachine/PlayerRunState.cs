@@ -17,6 +17,9 @@ public class PlayerRunState : PlayerBaseState
         Ctx.AppliedMovement = Ctx.Reference.forward * Ctx.CurrentMovementInput.y * Ctx.RunMultiplier
            + Ctx.Reference.right * Ctx.CurrentMovementInput.x * Ctx.RunMultiplier + 
            new Vector3(0, Ctx.AppliedMovementY, 0);
+
+        Ctx.Animator.SetFloat(Ctx.DirXHash, Ctx.CurrentMovementInput.x);
+        Ctx.Animator.SetFloat(Ctx.DirYHash, Ctx.CurrentMovementInput.y);
     }
 
     public override void ExitState() {}
