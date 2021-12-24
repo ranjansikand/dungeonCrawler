@@ -20,7 +20,13 @@ public class BruteSearching : BruteBaseState
 
     public override void ExitState() {}
 
-    public override void CheckSwitchStates() {}
+    public override void CheckSwitchStates() {
+        if (IsTargetVisible()) {
+            SwitchState(Factory.Detected());
+        } else if (Ctx.IsDead) {
+            SwitchState(Factory.Dead());
+        }
+    }
 
     public override void InitializeSubState() {
         SetSubState(Factory.Patrol());

@@ -119,7 +119,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
             if (_bloodSplatter != null) Instantiate(_bloodSplatter, transform.position, Quaternion.identity);
 
             if (_currentHealth > 0) {
-                if (damage > _hurtThreshold) Animator.SetTrigger(_hurtHash);
+                if (damage > _hurtThreshold && !Attacking) Animator.SetTrigger(_hurtHash);
             } else {
                 _isDead = true; 
                 _bodyCollider.enabled = false;
