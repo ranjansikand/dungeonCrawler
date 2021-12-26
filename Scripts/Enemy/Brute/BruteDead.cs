@@ -11,8 +11,13 @@ public class BruteDead : BruteBaseState
     }
 
     public override void EnterState() {
+        Ctx.Agent.destination = Ctx.transform.position;
+        Debug.Log("Current position: " + Ctx.transform.position + " | Destination: " + Ctx.Agent.destination);
+
         // Start death animation
         Ctx.BodyCollider.enabled = false;
+        Ctx.Agent.enabled = false;
+        Ctx.Animator.SetTrigger("die");
     }
 
     public override void UpdateState() {}

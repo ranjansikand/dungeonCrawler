@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class MobCircling : MobBase
 {
-    Vector3 _destination;
-    bool _circling;
+    bool _retreating;
+
+    IEnumerator IEndRetreat()
+    {
+        yield return new WaitForSeconds(Random.Range(1f, 3.25f));
+
+        _retreating = false;
+    }
 
     public MobCircling(MobMachine currentContext, MobFactory stateFactory)
     : base (currentContext, stateFactory) {
@@ -20,10 +26,6 @@ public class MobCircling : MobBase
         CheckSwitchStates();
 
         Ctx.transform.LookAt(Ctx.Target);
-
-        if (Ctx.Agent.remainingDistance < 1) {
-            _circling = false;
-        }
     }
 
     public override void ExitState() {
@@ -31,7 +33,7 @@ public class MobCircling : MobBase
     }
 
     public override void CheckSwitchStates() {
-        if (!_circling) {
+        if (!_retreating) {
             SwitchState(Factory.Chase());
         }
     }
@@ -40,11 +42,11 @@ public class MobCircling : MobBase
 
     void PickDestination()
     {
-        _circling = true;
+        _retreating = true;
 
-        Vector3 dirFromTarget = new Vector3(Random.Range(-1f, 1f), 0, Random.Range(-1f,1f)).normalized;
-        _destination = dirFromTarget * Ctx.CircleRange;
+        Vector3 dirAway = (Ctx.Target.position - Ctx.transform.position).normalized;
 
-        Ctx.Agent.SetDestination(Ctx.Target.position + _destination);
+        Ctx.StartCoroutine(IEndRetreat());
+        Ctx.Agent.SetDestination(dirAway * 7f);
     }
 }

@@ -21,7 +21,18 @@ public class MobAttack : MobBase
 
     public override void CheckSwitchStates() {
         if (!Ctx.Attacking) {
-            SwitchState(Factory.Circle());
+            int nextState = Random.Range(1, 3);
+            switch (nextState) {
+                case (1):
+                    SwitchState(Factory.Circle());
+                    break;
+                case (2):
+                    SwitchState(Factory.Attack());
+                    break;
+                default:
+                    SwitchState(Factory.Chase());
+                    break;
+            }
         }
     }
 

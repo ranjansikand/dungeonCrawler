@@ -1,5 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
+// State machine for Brute-class enemies
+// These enemies carry shields and therefore have logic that 
+// encompasses blocking and guard-breaking
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -33,7 +35,7 @@ public class BruteMachine : MonoBehaviour, IDamagable
     [SerializeField] int _numberOfAttacks;
     bool _isAttacking;
     bool _battlecry = false;
-    WaitForSeconds _staggerDuration = new WaitForSeconds(1f);
+    WaitForSeconds _staggerDuration = new WaitForSeconds(2f);
 
 
     [Header("Health and Damage")]
@@ -72,7 +74,7 @@ public class BruteMachine : MonoBehaviour, IDamagable
 
     public BruteBaseState CurrentState { get { return _currentState; } set { _currentState = value; }}
 
-    public bool GuardBroken { get { return _guardBroken; }}
+    public bool GuardBroken { get { return _guardBroken; } set { _guardBroken = value; }}
     public bool IsDead { get { return _isDead; }}
     public bool IsBlocking { get { return _isBlocking; } set { _isBlocking = value; }}
     public bool IsAttacking { get { return _isAttacking; } set { _isAttacking = value; }}
@@ -110,7 +112,10 @@ public class BruteMachine : MonoBehaviour, IDamagable
         _staggerHash = Animator.StringToHash("staggered");
         _detectedHash = Animator.StringToHash("detected");
 
+        // One-time setting of variables
         _pinnedPosition = transform.position;
+        _currentHealth = _maxHealth;
+        _remainingPosture = _maxPosture;
     }
 
     void Update() 
@@ -120,8 +125,11 @@ public class BruteMachine : MonoBehaviour, IDamagable
 
     public void Damage(int damage) 
     {
-        if (_isBlocking) _remainingPosture -= damage; 
-        else _currentHealth -= damage;
+        if (_isBlocking) {
+            _remainingPosture -= damage;
+        } else {
+            _currentHealth -= damage;
+        }
 
         if (_remainingPosture <= 0) {
             Debug.Log("Guard broken!");
@@ -132,22 +140,27 @@ public class BruteMachine : MonoBehaviour, IDamagable
             Debug.Log("Dead");
             _isDead = true; 
         }
+
+        Debug.Log("Brute current health: " + _currentHealth);
     }
 
     public int CurrentHealth() {
         return _currentHealth;
     }
-
-    public void ToggleWeaponHitbox() {
-        // called from animation to toggle damage on and off
-        _weaponHitbox.enabled = !_weaponHitbox.enabled;
-    }
-
     public void ToggleShieldHitbox() {
         // called from animation to toggle damage on and off
         _shieldHitbox.enabled = !_shieldHitbox.enabled;
     }
 
+    public void EnableHitbox()
+    {
+        _weaponHitbox.enabled = true;
+    }
+
+    public void DisableHitbox()
+    {
+        _weaponHitbox.enabled = false;
+    }
     public void EndAttack()
     {
         // called at end of attack animations

@@ -49,31 +49,31 @@ ModelImporter:
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
-      loopBlendPositionY: 0
+      loopBlendPositionY: 1
       loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
+      keepOriginalOrientation: 1
+      keepOriginalPositionY: 0
       keepOriginalPositionXZ: 0
-      heightFromFeet: 0
+      heightFromFeet: 1
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       events:
       - time: 0.2986696
-        functionName: ToggleWeaponHitbox
+        functionName: EnableHitbox
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2e06082daba034c479784853ce623969, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
       - time: 0.41379678
-        functionName: ToggleWeaponHitbox
+        functionName: DisableHitbox
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2e06082daba034c479784853ce623969, type: 3}
         floatParameter: 0
         intParameter: 0
         messageOptions: 0
-      - time: 0.99055606
+      - time: 0.8887948
         functionName: EndAttack
         data: 
         objectReferenceParameter: {fileID: 11500000, guid: 2e06082daba034c479784853ce623969, type: 3}

@@ -13,7 +13,7 @@ public class BruteAttack : BruteBaseState
         Ctx.IsAttacking = true;
 
         // Start animation
-        Ctx.Animator.SetInteger(Ctx.AttackIntHash, Random.Range(1, Ctx.NumberOfAttacks));
+        Ctx.Animator.SetInteger(Ctx.AttackIntHash, Random.Range(0, Ctx.NumberOfAttacks));
     }
 
     public override void UpdateState() {
@@ -27,12 +27,7 @@ public class BruteAttack : BruteBaseState
 
     public override void CheckSwitchStates() {
         if (!Ctx.IsAttacking) {
-            if (Ctx.DistanceToTarget < (Ctx.AttackRange * 1.5f)) {
-                SwitchState(Factory.Block());
-            }
-            else {
-                SwitchState(Factory.Patrol());
-            }
+            SwitchState(Factory.Block());
         }
     }
 

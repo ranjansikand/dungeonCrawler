@@ -40,6 +40,7 @@ public abstract class BruteBaseState
     }
 
     protected void SwitchState(BruteBaseState newState) {
+        if (_isRootState && _currentSubState != null) { CloseSubState(); }
         ExitState();
 
         newState.EnterState();

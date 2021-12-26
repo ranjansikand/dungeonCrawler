@@ -14,6 +14,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     // Attacking
     [SerializeField] Collider _weaponHitbox;
     bool _attacking;
+    bool _dodging;
 
     [SerializeField] float _sightRange;
     [SerializeField] float _chaseRange;
@@ -31,6 +32,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     int _attackCountHash;
     int _hurtHash;
     int _deadHash;
+    int _dodgeHash;
 
     MobBase _currentState;
     MobFactory _states;
@@ -50,9 +52,11 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     public Animator Animator { get { return _animator; }}
     public int AttackCountHash { get { return _attackCountHash; }}
     public int DeadHash { get { return _deadHash; }}
+    public int DodgeHash { get { return _dodgeHash; }}
 
     // state-specific references
     public bool Attacking { get { return _attacking; } set { _attacking = value; }}
+    public bool Dodging { get { return _dodging; } set { _dodging = value; }}
     public int LayerMask { get { return 1 << 10; }}
     public int NumberOfAttacks { get { return _numberOfAttacks; }}
     public float SightRange { get { return _sightRange; }}
@@ -89,6 +93,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
         _attackCountHash = Animator.StringToHash("attackNumber"); 
         _hurtHash = Animator.StringToHash("hurt");
         _deadHash = Animator.StringToHash("dead");
+        _dodgeHash = Animator.StringToHash("dodge");
 
         // health
         _currentHealth = _maxHealth;
@@ -104,11 +109,6 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
         // called from animation to end attack cycle
         _attacking = false;
         Animator.SetInteger(_attackCountHash, 0);
-    }
-
-    public void ToggleWeaponHitbox() {
-        // called from animation to toggle damage on and off
-        _weaponHitbox.enabled = !_weaponHitbox.enabled;
     }
 
     // Health functions
@@ -142,5 +142,22 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
         if (_target == null) {
             _target = target;
         }
+    }
+
+    public void EnableHitbox()
+    {
+        // Called during the beginning of attack animations
+        _weaponHitbox.enabled = true;
+    }
+
+    public void DisableHitbox()
+    {
+        // Called during the end of attack animations
+        _weaponHitbox.enabled = false;
+    }
+
+    public void EndDodge()
+    {
+        _dodging = false;
     }
 }

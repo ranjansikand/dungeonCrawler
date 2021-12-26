@@ -20,7 +20,7 @@ public class BrutePursue : BruteBaseState
     }
 
     public override void CheckSwitchStates() {
-        if (Ctx.DistanceToTarget < Ctx.AttackRange) {
+        if (Ctx.DistanceToTarget <= Ctx.AttackRange) {
             SwitchState(Factory.Attack());
         }
     }

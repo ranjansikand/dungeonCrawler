@@ -1,14 +1,12 @@
+// State that controls the stagger for shielded enemies
+
 using System.Collections;
 
 public class BruteStaggered : BruteBaseState
 {
-    bool _postureRestored;
-
-    IEnumerator IEndStagger()
-    {
+    IEnumerator IEndStagger() {
         yield return Ctx.StaggerDuration;
-
-        _postureRestored = true;
+        CheckSwitchStates();
     }
     public BruteStaggered(BruteMachine currentContext, BruteStateFactory stateFactory)
     : base (currentContext, stateFactory) {
@@ -18,25 +16,23 @@ public class BruteStaggered : BruteBaseState
 
     public override void EnterState() {
         // Start stagger animation
-
-        _postureRestored = false;
+        Ctx.GuardBroken = false;
+        Ctx.Animator.SetBool(Ctx.StaggerHash, true);
         Ctx.StartCoroutine(IEndStagger());
     }
 
-    public override void UpdateState() {
-        CheckSwitchStates();
-    }
+    public override void UpdateState() {}
 
     public override void ExitState() {
         Ctx.CurrentPosture = Ctx.MaxPosture;
-        // Stop animation
+        Ctx.Animator.SetBool(Ctx.StaggerHash, false);
     }
 
     public override void CheckSwitchStates() {
-        if (_postureRestored) {
-            SwitchState(Factory.Detected());
-        } else if (Ctx.IsDead) {
+        if (Ctx.IsDead) {
             SwitchState(Factory.Dead());
+        } else {
+            SwitchState(Factory.Detected());
         }
     }
 

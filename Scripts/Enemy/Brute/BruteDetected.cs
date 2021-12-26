@@ -1,5 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+// State that controls post-detection behavior
+// This includes combat and switching between combat-related states
+
 using UnityEngine;
 
 public class BruteDetected : BruteBaseState
@@ -13,9 +14,6 @@ public class BruteDetected : BruteBaseState
     public override void EnterState() {
         Ctx.Agent.SetDestination(Ctx.transform.position);
         // Play detected effect
-        if (!Ctx.Battlecry) Ctx.Animator.SetTrigger(Ctx.DetectedHash);
-
-        Debug.Log("Detected target");
     }
 
     public override void UpdateState() {
@@ -39,6 +37,6 @@ public class BruteDetected : BruteBaseState
     }
 
     public override void InitializeSubState() {
-        if (Ctx.Battlecry) SetSubState(Factory.Pursue());
+        SetSubState(Factory.Pursue());
     }
 }
