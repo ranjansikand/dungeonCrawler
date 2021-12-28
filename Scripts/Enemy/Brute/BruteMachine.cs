@@ -41,6 +41,7 @@ public class BruteMachine : MonoBehaviour, IDamagable
     [Header("Health and Damage")]
     [SerializeField] int _maxHealth; // max damage that can be taken
     [SerializeField] int _maxPosture; // damage taken before staggered
+    [SerializeField] GameObject _bloodSplatter;
     int _currentHealth;
     bool _guardBroken = false;
     bool _isDead = false;
@@ -51,6 +52,11 @@ public class BruteMachine : MonoBehaviour, IDamagable
     int _lookingHash;
     int _staggerHash;
     int _detectedHash;
+
+    [Header("Sprites")]
+    [SerializeField] StatusSprite _status;
+    [SerializeField] Sprite _confused;
+    [SerializeField] Sprite _alarmed;
 
     BruteBaseState _currentState;
     BruteStateFactory _states;
@@ -66,6 +72,11 @@ public class BruteMachine : MonoBehaviour, IDamagable
     public int LookingHash { get { return _lookingHash; }}
     public int StaggerHash { get { return _staggerHash; }}
     public int DetectedHash { get { return _detectedHash; }}
+
+    // Sprites
+    public StatusSprite Status { get { return _status; }}
+    public Sprite Confused { get { return _confused; }}
+    public Sprite Alarmed { get { return _alarmed; }}
 
     // targeting and detection
     public Transform Target { get { return _target; } set { _target = value; }}
@@ -100,11 +111,6 @@ public class BruteMachine : MonoBehaviour, IDamagable
         _animator = GetComponent<Animator>();
         _bodyCollider = GetComponent<Collider>();
 
-        // Initialize state behavior
-        _states = new BruteStateFactory(this);
-        _currentState = _states.Searching();
-        _currentState.EnterState();
-
         // Assign animation hashes
         _blockingHash = Animator.StringToHash("blocking");
         _attackIntHash = Animator.StringToHash("attack");
@@ -116,6 +122,11 @@ public class BruteMachine : MonoBehaviour, IDamagable
         _pinnedPosition = transform.position;
         _currentHealth = _maxHealth;
         _remainingPosture = _maxPosture;
+
+        // Initialize state behavior
+        _states = new BruteStateFactory(this);
+        _currentState = _states.Searching();
+        _currentState.EnterState();
     }
 
     void Update() 
@@ -129,6 +140,7 @@ public class BruteMachine : MonoBehaviour, IDamagable
             _remainingPosture -= damage;
         } else {
             _currentHealth -= damage;
+            Instantiate(_bloodSplatter, transform.position, Quaternion.identity);
         }
 
         if (_remainingPosture <= 0) {
@@ -139,6 +151,8 @@ public class BruteMachine : MonoBehaviour, IDamagable
         if (_currentHealth <= 0) {
             Debug.Log("Dead");
             _isDead = true; 
+            HurtEffect();
+            Invoke("UndoHurtEffect", 0.25f);
         }
 
         Debug.Log("Brute current health: " + _currentHealth);
@@ -173,4 +187,13 @@ public class BruteMachine : MonoBehaviour, IDamagable
         _battlecry = true;
     }
 
+    void HurtEffect()
+    {
+        Time.timeScale = 0.25f;
+    }
+
+    void UndoHurtEffect()
+    {
+        Time.timeScale = 1;
+    }
 }

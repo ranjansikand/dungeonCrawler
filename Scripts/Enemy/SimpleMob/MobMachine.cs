@@ -123,6 +123,8 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
             } else {
                 _isDead = true; 
                 _bodyCollider.enabled = false;
+                HurtEffect();
+                Invoke("UndoHurtEffect", 0.25f);
             }
             Invoke("EndRecovery", 0.25f);
         }
@@ -159,5 +161,15 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     public void EndDodge()
     {
         _dodging = false;
+    }
+
+    void HurtEffect()
+    {
+        Time.timeScale = 0.25f;
+    }
+
+    void UndoHurtEffect()
+    {
+        Time.timeScale = 1;
     }
 }

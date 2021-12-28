@@ -37,11 +37,7 @@ public class PlayerAttackState : PlayerBaseState
     }
 
     public override void InitializeSubState() {
-        if (Ctx.IsBlocking || Ctx.IsBlockPressed) {
-            SetSubState(Factory.Block());
-        } else {
             SetSubState(Factory.Standard());
-        }
     }
 
     public override void CheckSwitchStates() {
@@ -68,6 +64,7 @@ public class PlayerAttackState : PlayerBaseState
 
     void HandleAttack()
     {
+        if (Ctx.IsBlockPressed) return;
         if (Ctx.CurrentAttackResetRoutine != null) Ctx.StopCoroutine(Ctx.CurrentAttackResetRoutine);
 
         // set variables

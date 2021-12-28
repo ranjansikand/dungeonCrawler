@@ -12,7 +12,9 @@ public class BruteSearching : BruteBaseState
         InitializeSubState();
     }
 
-    public override void EnterState() {}
+    public override void EnterState() {
+        Ctx.Status.UpdateSprite(Ctx.Confused);
+    }
 
     public override void UpdateState() {
         CheckSwitchStates();

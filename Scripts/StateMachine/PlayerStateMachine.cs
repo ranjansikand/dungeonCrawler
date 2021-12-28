@@ -65,6 +65,7 @@ public class PlayerStateMachine : MonoBehaviour
     [SerializeField] WaitForSeconds _blockResetDelay = new WaitForSeconds(1f);
     bool _isBlockPressed;
     bool _isBlocking;
+    int _isBlockingHash;
     float _blockTimeRemaining;
     public delegate void OnBlockDelegate();
     public static OnBlockDelegate onBlockStarted;
@@ -99,6 +100,7 @@ public class PlayerStateMachine : MonoBehaviour
     public int IsRunningHash { get { return _isRunningHash; }}
     public int JumpCountHash { get { return _jumpCountHash; }}
     public int AttackingHash { get { return _attackingHash; }}
+    public int IsBlockingHash { get { return _isBlockingHash; }}
     public int AttackCount { get { return _attackCount; } set { _attackCount = value; }}
     public int AttackCountHash { get { return _attackCountHash; }}
     public int IsDodgingHash { get { return _dodgingHash; }}
@@ -149,6 +151,7 @@ public class PlayerStateMachine : MonoBehaviour
         _isFallingHash = Animator.StringToHash("isFalling");
         _jumpCountHash = Animator.StringToHash("jumpCount");
         _attackingHash = Animator.StringToHash("attacking");
+        _isBlockingHash = Animator.StringToHash("isBlocking");
         _attackCountHash = Animator.StringToHash("attackCount");
         _dodgingHash = Animator.StringToHash("isDodging");
         _dirXHash = Animator.StringToHash("DirX");

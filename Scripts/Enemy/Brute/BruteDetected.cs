@@ -14,6 +14,8 @@ public class BruteDetected : BruteBaseState
     public override void EnterState() {
         Ctx.Agent.SetDestination(Ctx.transform.position);
         // Play detected effect
+
+        if (Ctx.Alarmed != null) Ctx.Status.UpdateSprite(Ctx.Alarmed);
     }
 
     public override void UpdateState() {

@@ -30,7 +30,7 @@ public class Combat : MonoBehaviour, IDamagable
     [Header("Blocking")]
     [SerializeField] GameObject _parentObj;
     [SerializeField] Shader _standardShader;
-    [SerializeField] Shader _blockingShader;
+    [SerializeField] Shader _hurtShader;
 
     Renderer[] _renderers;
 
@@ -67,19 +67,19 @@ public class Combat : MonoBehaviour, IDamagable
     }
 
     void OnBlockStarted() {
-        // instantiate effect
-        for (int i = 0; i < _renderers.Length; i++) {
-            _renderers[i].material.shader = _blockingShader;
-        }
+        // // instantiate effect
+        // for (int i = 0; i < _renderers.Length; i++) {
+        //     _renderers[i].material.shader = _blockingShader;
+        // }
         // negate damaging
         _invulnerable = true;
         _hitboxStats.SetDamage(0);
     }
     void OnBlockEnded() {
-        // end effect
-        for (int i = 0; i < _renderers.Length; i++) {
-            _renderers[i].material.shader = _standardShader;
-        }
+        // // end effect
+        // for (int i = 0; i < _renderers.Length; i++) {
+        //     _renderers[i].material.shader = _standardShader;
+        // }
         // re-enable damage
         _invulnerable = false;
         _hitboxStats.SetDamage(_damage);
@@ -123,9 +123,13 @@ public class Combat : MonoBehaviour, IDamagable
 
     public void Damage(int damage)
     {
-        if (!_invulnerable) _health -= damage;
+        if (_invulnerable) return;
+        
+        _health -= damage;
 
         UpdateHealthbar();
+        HurtShaderEffect();
+        Invoke("HurtShaderEffect", 0.25f);
 
         Debug.Log(_health);
     }
@@ -146,5 +150,17 @@ public class Combat : MonoBehaviour, IDamagable
         StopCoroutine("CheckForDeath");
         player.IsDead = true;
         player.Animator.SetTrigger("Die");
+    }
+
+    void HurtShaderEffect()
+    {
+        Shader newShader;
+
+        if (_renderers[0].material.shader == _standardShader) newShader = _hurtShader;
+        else newShader = _standardShader;
+
+        for (int i = 0; i < _renderers.Length; i++) {
+            _renderers[i].material.shader = newShader;
+        }
     }
 }

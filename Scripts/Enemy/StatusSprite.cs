@@ -12,7 +12,7 @@ public class StatusSprite : MonoBehaviour
     }
     public void UpdateSprite(Sprite newSprite)
     {
-        _spriteRenderer.sprite = newSprite;
+        if (_spriteRenderer != null) _spriteRenderer.sprite = newSprite;
 
         StartCoroutine(IClearSprite());
     }
