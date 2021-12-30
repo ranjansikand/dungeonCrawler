@@ -67,31 +67,28 @@ public class Combat : MonoBehaviour, IDamagable
     }
 
     void OnBlockStarted() {
-        // // instantiate effect
-        // for (int i = 0; i < _renderers.Length; i++) {
-        //     _renderers[i].material.shader = _blockingShader;
-        // }
-        // negate damaging
         _invulnerable = true;
-        _hitboxStats.SetDamage(0);
     }
     void OnBlockEnded() {
-        // // end effect
-        // for (int i = 0; i < _renderers.Length; i++) {
-        //     _renderers[i].material.shader = _standardShader;
-        // }
-        // re-enable damage
         _invulnerable = false;
-        _hitboxStats.SetDamage(_damage);
     }
 
-    public void ToggleHitbox()
+    public void ActivateHitbox()
     {
-        // call from attack animations to enable impacts
-        _weaponHitbox.enabled = !_weaponHitbox.enabled;
+        // Called at the beginning of player's attack's damage period
+        _weaponHitbox.enabled = true;
 
-        // toggle effect
-        if (_weaponHitbox.enabled) {_weaponSlash.Play();}
+        // enable slash effect
+        _weaponSlash.Play();
+    }
+
+    public void DeactivateHitbox()
+    {
+        // Called at the end of attack damage period
+        _weaponHitbox.enabled = false;
+
+        // disable slash effect
+        _weaponSlash.Stop();
     }
 
     public void ToggleCharacterCollisions()

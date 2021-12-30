@@ -41,10 +41,14 @@ public class BruteMachine : MonoBehaviour, IDamagable
     [Header("Health and Damage")]
     [SerializeField] int _maxHealth; // max damage that can be taken
     [SerializeField] int _maxPosture; // damage taken before staggered
-    [SerializeField] GameObject _bloodSplatter;
     int _currentHealth;
     bool _guardBroken = false;
     bool _isDead = false;
+
+    [Header("Effects")]
+    [SerializeField] ParticleSystem _bloodSplatter;
+    [SerializeField] ParticleSystem _hit;
+    [SerializeField] float _deathSlowMo = .25f;
 
     // Animation hashes
     int _blockingHash;
@@ -136,11 +140,14 @@ public class BruteMachine : MonoBehaviour, IDamagable
 
     public void Damage(int damage) 
     {
+        _hit.Play();
+
         if (_isBlocking) {
             _remainingPosture -= damage;
         } else {
             _currentHealth -= damage;
-            Instantiate(_bloodSplatter, transform.position, Quaternion.identity);
+            _bloodSplatter.Stop();
+            _bloodSplatter.Play();
         }
 
         if (_remainingPosture <= 0) {
@@ -152,7 +159,7 @@ public class BruteMachine : MonoBehaviour, IDamagable
             Debug.Log("Dead");
             _isDead = true; 
             HurtEffect();
-            Invoke("UndoHurtEffect", 0.25f);
+            Invoke("UndoHurtEffect", _deathSlowMo);
         }
 
         Debug.Log("Brute current health: " + _currentHealth);

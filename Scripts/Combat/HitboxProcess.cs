@@ -1,9 +1,11 @@
+// Controls hitbox for enemies
+
 using UnityEngine;
 
 public class HitboxProcess : MonoBehaviour
 {
     [SerializeField] int dmg = 1;
-
+    
     public void SetDamage(int damage)
     {
         dmg = damage;

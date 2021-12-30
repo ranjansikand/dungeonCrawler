@@ -20,6 +20,8 @@ public class LocomotionSimpleAgent : MonoBehaviour {
     
     void Update ()
     {
+        if (!agent.enabled) return;
+        
         Vector3 worldDeltaPosition = agent.nextPosition - transform.position;
 
         // Map 'worldDeltaPosition' to local space

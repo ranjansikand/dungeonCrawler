@@ -70,7 +70,10 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     [SerializeField] int _maxHealth;
     [SerializeField] int _hurtThreshold;
 
-    [SerializeField] GameObject _bloodSplatter;
+    [Header("Effects")]
+    [SerializeField] ParticleSystem _bloodSplatter;
+    [SerializeField] ParticleSystem _hit;
+    [SerializeField] float _deathSlowMo = 0.25f;
 
     bool _isDead = false, _isRecovering = false;
     int _currentHealth;
@@ -116,7 +119,11 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
         if (!_isRecovering) {
             _isRecovering = true;
             _currentHealth -= damage;
-            if (_bloodSplatter != null) Instantiate(_bloodSplatter, transform.position, Quaternion.identity);
+
+            _bloodSplatter.Stop();
+            _bloodSplatter.Play();
+
+            _hit.Play();
 
             if (_currentHealth > 0) {
                 if (damage > _hurtThreshold && !Attacking) Animator.SetTrigger(_hurtHash);
@@ -124,7 +131,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
                 _isDead = true; 
                 _bodyCollider.enabled = false;
                 HurtEffect();
-                Invoke("UndoHurtEffect", 0.25f);
+                Invoke("UndoHurtEffect", _deathSlowMo);
             }
             Invoke("EndRecovery", 0.25f);
         }

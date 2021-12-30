@@ -23,7 +23,11 @@ public class PlayerDodgeState : PlayerBaseState
         }
     }
 
-    public override void ExitState() {}
+    public override void ExitState() {
+        // Reset dodge direction just in case
+        Ctx.Animator.SetFloat(Ctx.DirXHash, 0);
+        Ctx.Animator.SetFloat(Ctx.DirYHash, 0);
+    }
 
     public override void InitializeSubState() {
         if (Ctx.IsBlocking || Ctx.IsBlockPressed) {
@@ -59,6 +63,9 @@ public class PlayerDodgeState : PlayerBaseState
         } else {
             // lock-in direction on state enter
             dodgeDirection = Ctx.CurrentMovementInput;
+            // Set dodge direction
+            Ctx.Animator.SetFloat(Ctx.DirXHash, dodgeDirection.x);
+            Ctx.Animator.SetFloat(Ctx.DirYHash, dodgeDirection.y);
             // start animation
             Ctx.Animator.SetTrigger(Ctx.IsDodgingHash);
         }

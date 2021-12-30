@@ -11,6 +11,10 @@ public class BruteGuard : BruteBaseState
         CheckSwitchStates();
     }
 
+    // float targetRotation = Mathf.Atan2(_currentMovementInput.x, _currentMovementInput.y) * Mathf.Rad2Deg + _reference.eulerAngles.y;
+    // transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref _speedSmoothVelocity, 0.1f);
+
+
     public BruteGuard(BruteMachine currentContext, BruteStateFactory stateFactory)
     : base (currentContext, stateFactory) {
         IsLeafState = true;
