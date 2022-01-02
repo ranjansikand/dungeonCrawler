@@ -11,12 +11,18 @@ public class BruteDead : BruteBaseState
     }
 
     public override void EnterState() {
-        Ctx.Agent.destination = Ctx.transform.position;
-        Debug.Log("Current position: " + Ctx.transform.position + " | Destination: " + Ctx.Agent.destination);
-
         // Start death animation
         Ctx.BodyCollider.enabled = false;
         Ctx.Agent.enabled = false;
+
+        // turn off all animations
+        foreach (AnimatorControllerParameter parameter in Ctx.Animator.parameters) {
+            if (parameter.type == AnimatorControllerParameterType.Bool)
+                Ctx.Animator.SetBool(parameter.name, false);
+        }
+
+        // Exit stagger if still staggered
+        if (Ctx.Animator.GetBool(Ctx.StaggerHash)) Ctx.Animator.SetBool(Ctx.StaggerHash, false);
         Ctx.Animator.SetTrigger("die");
     }
 

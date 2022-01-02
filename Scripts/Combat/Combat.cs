@@ -8,7 +8,6 @@ public class Combat : MonoBehaviour, IDamagable
 
     [Header("General combat stats")]
     [SerializeField] GameObject _weapon;
-    [SerializeField] int _damage = 1;
     [SerializeField] CharacterController _controller;
     
     Collider _weaponHitbox;
@@ -52,7 +51,6 @@ public class Combat : MonoBehaviour, IDamagable
         PlayerStateMachine.onBlockStarted += OnBlockStarted;
         PlayerStateMachine.onBlockEnded += OnBlockEnded;
 
-        _hitboxStats.SetDamage(_damage);
         UpdateHealthbar();
         StartCoroutine(CheckForDeath());
     }

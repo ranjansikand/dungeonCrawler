@@ -27,6 +27,11 @@ public class MobFactory
         return new MobLooking(_context, this);
     }
 
+
+    public MobBase Dead()
+    {
+        return new MobDead(_context, this);
+    }
     public MobBase Chase()
     {
         return new MobChase(_context, this);
@@ -37,18 +42,13 @@ public class MobFactory
         return new MobAttack(_context, this);
     }
 
-    public MobBase Dead()
+    public MobBase Waiting()
     {
-        return new MobDead(_context, this);
+        return new MobWaiting(_context, this);
     }
 
-    public MobBase Retreat()
+    public MobBase Dodge()
     {
-        return new MobRetreat(_context, this);
-    }
-
-    public MobBase Circle()
-    {
-        return new MobCircling(_context, this);
+        return new MobDodge(_context, this);
     }
 }

@@ -18,7 +18,6 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
 
     [SerializeField] float _sightRange;
     [SerializeField] float _chaseRange;
-    [SerializeField] float _circleRange;
     [SerializeField] float _attackRange;
     [SerializeField] int _numberOfAttacks;
 
@@ -33,6 +32,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     int _hurtHash;
     int _deadHash;
     int _dodgeHash;
+    int _blockingHash;
 
     MobBase _currentState;
     MobFactory _states;
@@ -53,6 +53,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     public int AttackCountHash { get { return _attackCountHash; }}
     public int DeadHash { get { return _deadHash; }}
     public int DodgeHash { get { return _dodgeHash; }}
+    public int BlockingHash { get { return _blockingHash; }}
 
     // state-specific references
     public bool Attacking { get { return _attacking; } set { _attacking = value; }}
@@ -61,7 +62,6 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     public int NumberOfAttacks { get { return _numberOfAttacks; }}
     public float SightRange { get { return _sightRange; }}
     public float ChaseRange { get { return _chaseRange; }}
-    public float CircleRange { get { return _circleRange; }}
     public float AttackRange { get { return _attackRange; }}
 
 
@@ -97,6 +97,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
         _hurtHash = Animator.StringToHash("hurt");
         _deadHash = Animator.StringToHash("dead");
         _dodgeHash = Animator.StringToHash("dodge");
+        _blockingHash = Animator.StringToHash("blocking");
 
         // health
         _currentHealth = _maxHealth;

@@ -6,14 +6,12 @@ using UnityEngine;
 
 public class BruteGuard : BruteBaseState
 {
+    float strength = 2.5f;
+
     IEnumerator IBlockTime() {
         yield return new WaitForSeconds(Random.Range(2.5f, 6f));
         CheckSwitchStates();
     }
-
-    // float targetRotation = Mathf.Atan2(_currentMovementInput.x, _currentMovementInput.y) * Mathf.Rad2Deg + _reference.eulerAngles.y;
-    // transform.eulerAngles = Vector3.up * Mathf.SmoothDampAngle(transform.eulerAngles.y, targetRotation, ref _speedSmoothVelocity, 0.1f);
-
 
     public BruteGuard(BruteMachine currentContext, BruteStateFactory stateFactory)
     : base (currentContext, stateFactory) {
@@ -35,6 +33,10 @@ public class BruteGuard : BruteBaseState
         }
         else {
             Ctx.Agent.SetDestination(Ctx.transform.position);
+            
+            Quaternion targetRotation = Quaternion.LookRotation (Ctx.Target.position - Ctx.transform.position);
+            float str = Mathf.Min (strength * Time.deltaTime, 1);
+            Ctx.transform.rotation = Quaternion.Lerp (Ctx.transform.rotation, targetRotation, str);
         }
     }
 
