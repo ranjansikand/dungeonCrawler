@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerJumpState : PlayerBaseState
@@ -18,7 +17,10 @@ public class PlayerJumpState : PlayerBaseState
 
     public override void EnterState() {
         Ctx.IsGrounded = false;
+        Ctx.FallMultiplier = 2.0f;
         HandleJump();
+
+        Debug.Log("Gliding: " + Ctx.IsGliding);
     }
 
     public override void UpdateState() {
@@ -73,16 +75,13 @@ public class PlayerJumpState : PlayerBaseState
     void HandleGravity()
     {
         bool isFalling = Ctx.CurrentMovementY <= 0.05f || !Ctx.IsJumpPressed;
-        float fallMultiplier = 2.0f;
 
-        if (isFalling)
-        {
+        if (isFalling) {
             float previousYVelocity = Ctx.CurrentMovementY;
-            Ctx.CurrentMovementY = Ctx.CurrentMovementY + (Ctx.JumpGravities[Ctx.JumpCount] * fallMultiplier * Time.deltaTime);
+            Ctx.CurrentMovementY = Ctx.CurrentMovementY + (Ctx.JumpGravities[Ctx.JumpCount] * Ctx.FallMultiplier * Time.deltaTime);
             Ctx.AppliedMovementY = Mathf.Max((previousYVelocity + Ctx.CurrentMovementY) * 0.5f, -20.0f);
         }
-        else 
-        {
+        else  {
             float previousYVelocity = Ctx.CurrentMovementY;
             Ctx.CurrentMovementY = Ctx.CurrentMovementY + (Ctx.JumpGravities[Ctx.JumpCount] * Time.deltaTime);
             Ctx.AppliedMovementY = (previousYVelocity +Ctx.CurrentMovementY) * 0.5f;

@@ -4,7 +4,8 @@ using UnityEngine.UI;
 
 public class Combat : MonoBehaviour, IDamagable
 {
-    [SerializeField] Image _healthbar;
+    // [SerializeField] Image _healthbar;
+    [SerializeField] Healthbar playerHealthBar;
 
     [Header("General combat stats")]
     [SerializeField] GameObject _weapon;
@@ -51,7 +52,8 @@ public class Combat : MonoBehaviour, IDamagable
         PlayerStateMachine.onBlockStarted += OnBlockStarted;
         PlayerStateMachine.onBlockEnded += OnBlockEnded;
 
-        UpdateHealthbar();
+        // UpdateHealthbar();
+        playerHealthBar.InitializeHealth(_maxHealth);
         StartCoroutine(CheckForDeath());
     }
 
@@ -110,29 +112,24 @@ public class Combat : MonoBehaviour, IDamagable
         
     }
 
-    public void ToggleInvulnerable()
-    {
-        // call from the dodge to disable and enable hitbox
-        _invulnerable = !_invulnerable;
-    }
-
     public void Damage(int damage)
     {
         if (_invulnerable) return;
         
         _health -= damage;
 
-        UpdateHealthbar();
+        // UpdateHealthbar();
+        playerHealthBar.TakeDamage(damage);
         HurtShaderEffect();
         Invoke("HurtShaderEffect", 0.25f);
 
         Debug.Log(_health);
     }
 
-    void UpdateHealthbar()
-    {
-        _healthbar.fillAmount = 1.0f  * _health / _maxHealth;
-    }
+    // void UpdateHealthbar()
+    // {
+    //     _healthbar.fillAmount = 1.0f  * _health / _maxHealth;
+    // }
 
     public int CurrentHealth()
     {

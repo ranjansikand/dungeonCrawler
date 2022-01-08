@@ -5,6 +5,7 @@ public class MobChase : MobBase
 {
     WaitForSeconds delay = new WaitForSeconds(0.5f);
     float strength = 1.5f;
+    float timeInState, maxTimeInState;
 
     bool _targetInRange;
 
@@ -13,12 +14,21 @@ public class MobChase : MobBase
 
     public override void EnterState() {
         _targetInRange = false;
+        Ctx.ReenableAgent();
         Ctx.StartCoroutine(IHandlePursuit());
+
+        maxTimeInState = 0.5f + Vector3.Distance(Ctx.Target.position, Ctx.transform.position)/Ctx.Agent.speed;
     }
 
     public override void UpdateState() {
         CheckSwitchStates();
         HandleRotation();
+
+        // To prevent hangups
+        timeInState += Time.deltaTime;
+        if (timeInState > maxTimeInState) {
+            _targetInRange = true;
+        }
     }
 
     public override void ExitState() {

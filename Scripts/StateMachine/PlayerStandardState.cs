@@ -18,7 +18,11 @@ public class PlayerStandardState : PlayerBaseState
 
     public override void CheckSwitchStates() {
         if (Ctx.IsBlockPressed) {
-            SwitchState(Factory.Block());
+            if (!Ctx.IsGrounded) {
+                SwitchState(Factory.Glide());
+            } else {
+                SwitchState(Factory.Block());
+            }
         }
     }
 }

@@ -10,7 +10,8 @@ public abstract class MobBase
     protected bool IsRootState { set { _isRootState = value; }}
     protected bool IsLeafState { set { _isLeafState = value; }}
     protected MobMachine Ctx { get { return _ctx; }}
-    protected MobFactory Factory {get {return _factory; }}
+    protected MobFactory Factory {get { return _factory; }}
+    public MobBase Substate { get { return _currentSubState; }}
 
     public MobBase(MobMachine currentContext, MobFactory stateFactory) {
         _ctx = currentContext;
@@ -59,7 +60,10 @@ public abstract class MobBase
 
     protected void CloseSubState()
     {
+        if (_currentSubState.Substate != null) _currentSubState.CloseSubState();
         _currentSubState.ExitState();
         _currentSubState = null;
     }
+
+
 }

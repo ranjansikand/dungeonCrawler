@@ -9,6 +9,7 @@ public class MobPatrol : MobBase
     : base (currentContext, stateFactory) {}
 
     public override void EnterState() {
+        Ctx.ReenableAgent();
         HandleDestination();
     }
 
@@ -30,10 +31,8 @@ public class MobPatrol : MobBase
 
     void HandleDestination()
     {
-        Vector3 patrolDestination = new Vector3(
-                Ctx.transform.position.x + Random.Range(-patrolRadius, patrolRadius), 
-                Ctx.transform.position.y, 
-                Ctx.transform.position.z + Random.Range(-patrolRadius, patrolRadius) 
+        Vector3 patrolDestination = new Vector3( Ctx.Anchor.x + Random.Range(-patrolRadius, patrolRadius), 
+                Ctx.transform.position.y, Ctx.Anchor.z + Random.Range(-patrolRadius, patrolRadius) 
             );
 
         if (Physics.Raycast(patrolDestination, -Ctx.transform.up, 2f, groundLayer)) {

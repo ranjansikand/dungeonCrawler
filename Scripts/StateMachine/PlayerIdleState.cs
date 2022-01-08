@@ -6,8 +6,11 @@ public class PlayerIdleState : PlayerBaseState
     }
 
     public override void EnterState() {
-        Ctx.Animator.SetBool(Ctx.IsWalkingHash, false);
-        Ctx.Animator.SetBool(Ctx.IsRunningHash, false);
+        if (Ctx.Animator.GetBool(Ctx.IsWalkingHash) || Ctx.Animator.GetBool(Ctx.IsRunningHash)) {
+            Ctx.Animator.SetBool(Ctx.IsWalkingHash, false);
+            Ctx.Animator.SetBool(Ctx.IsRunningHash, false);
+        }
+        
         Ctx.AppliedMovementX = 0;
         Ctx.AppliedMovementZ = 0;
     }

@@ -6,7 +6,7 @@ AnimationClip:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Standing Dodge Backward
+  m_Name: EnemyDodge
   serializedVersion: 6
   m_Legacy: 0
   m_Compressed: 0
@@ -42642,7 +42642,7 @@ AnimationClip:
   - time: 1.4
     functionName: EndDodge
     data: 
-    objectReferenceParameter: {fileID: 11500000, guid: 3617a0a23e43ad64f9ab042f83231199, type: 3}
+    objectReferenceParameter: {fileID: 11500000, guid: d7fc0331362e3a245903e6c936b7dcb1, type: 3}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0

@@ -22,6 +22,7 @@ public class PlayerStateMachine : MonoBehaviour
     // constants
     [SerializeField] float _walkMultiplier = 2.0f;
     [SerializeField] float _runMultiplier = 4.0f;
+    float _fallMultiplier = 2.0f;
     int _zero = 0;
 
     // gravity
@@ -54,7 +55,6 @@ public class PlayerStateMachine : MonoBehaviour
 
     // dodge variables
     bool _isDodgePressed = false;
-    bool _isQuickstepPressed = false;
     bool _isDodging = false;
     int _dodgingHash;
     int _dirXHash;
@@ -70,6 +70,9 @@ public class PlayerStateMachine : MonoBehaviour
     public delegate void OnBlockDelegate();
     public static OnBlockDelegate onBlockStarted;
     public static OnBlockDelegate onBlockEnded;
+
+    // glide
+    bool _isGliding;
 
     // death
     bool isDead;
@@ -92,8 +95,10 @@ public class PlayerStateMachine : MonoBehaviour
     public WaitForSeconds BlockResetDelay { get { return _blockResetDelay; }}
     public OnBlockDelegate OnBlockStarted { get { return onBlockStarted; }}
     public OnBlockDelegate OnBlockEnded { get { return onBlockEnded; }}
+
     public Dictionary<int, float> InitialJumpVelocities { get {return _initialJumpVelocities; }}
     public Dictionary<int, float> JumpGravities { get { return _jumpGravities; }}
+
     public int JumpCount { get { return _jumpCount; } set {_jumpCount = value; }}
     public int IsJumpingHash { get { return _isJumpingHash; }}
     public int IsWalkingHash { get { return _isWalkingHash; }}
@@ -107,6 +112,7 @@ public class PlayerStateMachine : MonoBehaviour
     public int IsFallingHash { get { return _isFallingHash; }}
     public int DirXHash { get { return _dirXHash; }}
     public int DirYHash { get { return _dirYHash; }}
+
     public bool IsMovementPressed { get { return _isMovementPressed; }}
     public bool IsRunPressed { get { return _isRunPressed; }}
     public bool RequireNewJumpPress { get { return _requireNewJumpPress; } set { _requireNewJumpPress = value; }}
@@ -116,12 +122,13 @@ public class PlayerStateMachine : MonoBehaviour
     public bool IsAttackPressed { get { return _isAttackPressed; } set { _isAttackPressed = value; }}
     public bool IsAttacking { get { return _isAttacking; } set { _isAttacking = value; }}
     public bool IsDodgePressed { get { return _isDodgePressed; } set { _isDodgePressed = value; }}
-    public bool IsQuickstepPressed { get { return _isQuickstepPressed;  } set { _isQuickstepPressed = value; }}
     public bool IsDodging { get { return _isDodging; } set { _isDodging = value; }}
     public bool IsDead { get {return isDead;} set {isDead = value; }}
     public bool IsBlockPressed { get { return _isBlockPressed; } set { _isBlockPressed = value; }}
     public bool IsBlocking { get { return _isBlocking; } set { _isBlocking = value; }}
+    public bool IsGliding { get { return _isGliding; } set { _isGliding = value; }}
     public bool IsLockedOn { set { _lockedOn = value; }}
+
     public float GroundedGravity { get { return _groundedGravity; }}
     public float CurrentMovementY { get { return _currentMovement.y; } set { _currentMovement.y = value; }}
     public float AppliedMovementX { get { return _appliedMovement.x; } set { _appliedMovement.x = value; }}
@@ -129,8 +136,8 @@ public class PlayerStateMachine : MonoBehaviour
     public float AppliedMovementZ { get { return _appliedMovement.z; } set { _appliedMovement.z = value; }}
     public float RunMultiplier { get { return _runMultiplier; }}
     public float WalkMultiplier { get { return _walkMultiplier; }}
-    public float MaxBlockTime { get { return _maxBlockTime; }}
-    public float BlockTimeRemaining { get { return _blockTimeRemaining; } set { _blockTimeRemaining = value; }}
+    public float FallMultiplier { get { return _fallMultiplier; } set { _fallMultiplier = value; }}
+
     public Vector2 CurrentMovementInput { get { return _currentMovementInput; }}
     public Vector3 AppliedMovement { get { return _appliedMovement; } set { _appliedMovement = value; }}
     public Transform Reference { get { return _reference; }}
@@ -180,6 +187,11 @@ public class PlayerStateMachine : MonoBehaviour
         StartCoroutine(CheckForGround());
     }
 
+    void SetupBlockVariables()
+    {
+        _blockTimeRemaining = _maxBlockTime;
+    }
+
     void SetupJumpVariables()
     {
         float timeToApex = _maxJumpTime / 2;
@@ -198,11 +210,6 @@ public class PlayerStateMachine : MonoBehaviour
         _jumpGravities.Add(1, _gravity);
         _jumpGravities.Add(2, secondJumpGravity);
         _jumpGravities.Add(3, thirdJumpGravity);
-    }
-
-    void SetupBlockVariables()
-    {
-        _blockTimeRemaining = _maxBlockTime;
     }
 
     IEnumerator CheckForGround()

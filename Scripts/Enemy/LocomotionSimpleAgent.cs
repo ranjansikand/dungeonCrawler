@@ -20,9 +20,12 @@ public class LocomotionSimpleAgent : MonoBehaviour {
     
     void Update ()
     {
-        if (!agent.enabled) return;
-        
-        Vector3 worldDeltaPosition = agent.nextPosition - transform.position;
+        if (agent.enabled) HandleLocomotion();
+    }
+
+    void HandleLocomotion()
+    {
+                Vector3 worldDeltaPosition = agent.nextPosition - transform.position;
 
         // Map 'worldDeltaPosition' to local space
         float dx = Vector3.Dot (transform.right, worldDeltaPosition);
@@ -43,8 +46,6 @@ public class LocomotionSimpleAgent : MonoBehaviour {
         anim.SetBool("move", shouldMove);
         anim.SetFloat ("velX", velocity.x);
         anim.SetFloat ("velZ", velocity.y);
-
-        // GetComponent<LookAt>().lookAtTargetPosition = agent.steeringTarget + transform.forward;
     }
 
     void OnAnimatorMove ()

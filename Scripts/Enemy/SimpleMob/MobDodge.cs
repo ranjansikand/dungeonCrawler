@@ -1,9 +1,13 @@
-// Move to a new location
+// Move backwards
+// Called based on detected incoming attack
 
 using UnityEngine;
 
 public class MobDodge : MobBase
 {
+    Vector3 _directionToTarget;
+    float _dodgeSpeed = 3.5f;
+
     public MobDodge(MobMachine currentContext, MobFactory stateFactory)
     : base (currentContext, stateFactory) {
         IsLeafState = true;
@@ -16,13 +20,16 @@ public class MobDodge : MobBase
     public override void UpdateState() {
         CheckSwitchStates();
 
-        Ctx.transform.LookAt(new Vector3(Ctx.Target.position.x,0,Ctx.Target.position.z));
+        Ctx.transform.Translate(-_directionToTarget * _dodgeSpeed * Time.deltaTime);
     }
 
-    public override void ExitState() {}
+    public override void ExitState() {
+        Ctx.Agent.enabled = true;
+    }
 
     public override void CheckSwitchStates() {
-        if (Ctx.Agent.remainingDistance < 1f) {
+        if (!Ctx.Dodging) {
+            
             SwitchState(Factory.Waiting());
         }
     }
@@ -31,6 +38,15 @@ public class MobDodge : MobBase
 
     void ControlMotion()
     {
-        Ctx.Agent.Warp(Ctx.Target.position + new Vector3(Random.Range(-1, 2), 0, Random.Range(-1, 2)));
+        // Setup conditions
+        Ctx.Dodging = true;
+        Ctx.Agent.enabled = false;
+        Ctx.Animator.SetTrigger(Ctx.DodgeHash);
+        
+        // Calculate direction
+        _directionToTarget = (Ctx.Target.position - Ctx.transform.position).normalized;
+
+        // Prepare motion
+        Ctx.transform.rotation = Quaternion.LookRotation(_directionToTarget);
     }
 }

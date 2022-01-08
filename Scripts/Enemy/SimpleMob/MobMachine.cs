@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public class MobMachine : MonoBehaviour, IDamagable, IDetection
+public class MobMachine : MonoBehaviour, IDamagable
 {
     // Components
     NavMeshAgent _agent;
@@ -10,12 +10,14 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
 
     // Player or target from Searching state
     Transform _target;
+    PlayerStateMachine _playerMachine;
 
     // Attacking
     [SerializeField] Collider _weaponHitbox;
     bool _attacking;
     bool _dodging;
 
+    // Detection and radii
     [SerializeField] float _sightRange;
     [SerializeField] float _chaseRange;
     [SerializeField] float _attackRange;
@@ -26,6 +28,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     [SerializeField] StatusSprite _status;
     [SerializeField] Sprite _confused;
     [SerializeField] Sprite _alarmed;
+    [SerializeField] Sprite _dead;
 
     // animation hashes
     int _attackCountHash;
@@ -34,6 +37,22 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     int _dodgeHash;
     int _blockingHash;
 
+    Vector3 _anchorPosition;
+
+    // health and damage functions
+    [Header("Health")]
+    [SerializeField] int _maxHealth;
+    [SerializeField] int _hurtThreshold;
+
+    [Header("Effects")]
+    [SerializeField] ParticleSystem _bloodSplatter;
+    [SerializeField] ParticleSystem _hit;
+    [SerializeField] float _deathSlowMo = 0.15f;
+
+    bool _isDead = false, _isRecovering = false;
+    int _currentHealth;
+    WaitForSeconds delay = new WaitForSeconds(0.1f);
+
     MobBase _currentState;
     MobFactory _states;
 
@@ -41,12 +60,15 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     public NavMeshAgent Agent { get { return _agent; }}
     public MobBase CurrentState { get { return _currentState; } set { _currentState = value; }}
     public Transform Target { get { return _target; } set { _target = value; }}
+    public PlayerStateMachine PlayerMachine { get { return _playerMachine; } set { _playerMachine = value; }}
     public bool IsDead { get { return _isDead; }}
+    public Vector3 Anchor { get { return _anchorPosition; }}
 
     // Sprites
     public StatusSprite Status { get { return _status; }}
     public Sprite Confused { get { return _confused; }}
     public Sprite Alarmed { get { return _alarmed; }}
+    public Sprite Dead { get { return _dead; }}
 
     // animation references
     public Animator Animator { get { return _animator; }}
@@ -64,20 +86,7 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
     public float ChaseRange { get { return _chaseRange; }}
     public float AttackRange { get { return _attackRange; }}
 
-
-    // health and damage functions
-    [Header("Health")]
-    [SerializeField] int _maxHealth;
-    [SerializeField] int _hurtThreshold;
-
-    [Header("Effects")]
-    [SerializeField] ParticleSystem _bloodSplatter;
-    [SerializeField] ParticleSystem _hit;
-    [SerializeField] float _deathSlowMo = 0.25f;
-
-    bool _isDead = false, _isRecovering = false;
-    int _currentHealth;
-    WaitForSeconds delay = new WaitForSeconds(0.1f);
+    public string currentState;
 
     // Methods
     void Awake()
@@ -99,13 +108,16 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
         _dodgeHash = Animator.StringToHash("dodge");
         _blockingHash = Animator.StringToHash("blocking");
 
-        // health
+        // assign variables
         _currentHealth = _maxHealth;
+        _anchorPosition = transform.position;
     }
 
     void Update()
     {
         _currentState.UpdateStates();
+
+        currentState = _currentState.Substate.ToString();
     }
 
     // Use-specific methods
@@ -134,24 +146,21 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
                 HurtEffect();
                 Invoke("UndoHurtEffect", _deathSlowMo);
             }
-            Invoke("EndRecovery", 0.25f);
+            Invoke(nameof(EndRecovery), 0.25f);
         }
     }
 
-    void EndRecovery()
-    {
-        // called by damage coroutine
-        _isRecovering = false;
+    public void ReenableAgent() {
+        if (!_agent.enabled) _agent.enabled = true;
     }
 
     public int CurrentHealth() {
         return _currentHealth;
     }
 
-    public void AssignTarget(Transform target) {
-        if (_target == null) {
-            _target = target;
-        }
+    public void EndRecovery()
+    {
+        _isRecovering = false;
     }
 
     public void EnableHitbox()
@@ -173,11 +182,13 @@ public class MobMachine : MonoBehaviour, IDamagable, IDetection
 
     void HurtEffect()
     {
+        // Called at time of death
         Time.timeScale = 0.25f;
     }
 
     void UndoHurtEffect()
     {
+        // Called at the end of death
         Time.timeScale = 1;
     }
 }

@@ -21,7 +21,12 @@ public class MobWaiting : MobBase
         Ctx.StartCoroutine(ICheckSwitchStates());
     }
 
-    public override void UpdateState() {}
+    public override void UpdateState() {
+        if (Ctx.PlayerMachine.IsAttacking && Random.Range(0, 2) == 1) {
+            Ctx.StopCoroutine(ICheckSwitchStates());
+            SwitchState(Factory.Dodge());
+        }
+    }
 
     public override void ExitState() {
         Ctx.Animator.SetBool(Ctx.BlockingHash, false);
@@ -31,11 +36,7 @@ public class MobWaiting : MobBase
         float distance = Ctx.Target!=null ? Vector3.Distance(Ctx.transform.position, Ctx.Target.position) : 20f;
 
         if (distance < Ctx.AttackRange) {
-            if (Random.Range(1, 3) == 1) {
-                SwitchState(Factory.Dodge());
-            } else {
-                SwitchState(Factory.Attack());
-            }
+            SwitchState(Factory.Attack());
         } else if (distance < Ctx.ChaseRange) {
             SwitchState(Factory.Chase());
         } else {

@@ -9,7 +9,7 @@ public class BruteGuard : BruteBaseState
     float strength = 2.5f;
 
     IEnumerator IBlockTime() {
-        yield return new WaitForSeconds(Random.Range(2.5f, 6f));
+        yield return new WaitForSeconds(Random.Range(1f, 4f));
         CheckSwitchStates();
     }
 

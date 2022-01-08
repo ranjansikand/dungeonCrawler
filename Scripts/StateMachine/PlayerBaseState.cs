@@ -58,6 +58,8 @@ public abstract class PlayerBaseState
 
     protected void CloseSubState()
     {
+        if (_currentSubState == null) return;
+        _currentSubState.CloseSubState();
         _currentSubState.ExitState();
         _currentSubState = null;
     }

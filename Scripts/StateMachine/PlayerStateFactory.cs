@@ -7,6 +7,23 @@ public class PlayerStateFactory
         _context = currentContext;
     }
 
+    // Root states that pose an environment
+    public PlayerBaseState Grounded()
+    {
+        return new PlayerGroundedState(_context, this);
+    }
+
+    public PlayerBaseState Jump()
+    {
+        return new PlayerJumpState(_context, this);
+    }
+
+    public PlayerBaseState Falling()
+    {
+        return new PlayerFallState(_context, this);
+    }
+    
+    // Mid-level action states
     public PlayerBaseState Idle()
     {
         return new PlayerIdleState(_context, this);
@@ -22,16 +39,6 @@ public class PlayerStateFactory
         return new PlayerRunState(_context, this);
     }
 
-    public PlayerBaseState Jump()
-    {
-        return new PlayerJumpState(_context, this);
-    }
-
-    public PlayerBaseState Grounded()
-    {
-        return new PlayerGroundedState(_context, this);
-    }
-
     public PlayerBaseState Attack()
     {
         return new PlayerAttackState(_context, this);
@@ -42,6 +49,12 @@ public class PlayerStateFactory
         return new PlayerDodgeState(_context, this);
     }
 
+    public PlayerBaseState AirAttack()
+    {
+        return new PlayerAirAttack(_context, this);
+    }
+    
+    // "Leaf" states that modify actions
     public PlayerBaseState Standard()
     {
         return new PlayerStandardState(_context, this);
@@ -52,8 +65,8 @@ public class PlayerStateFactory
         return new PlayerBlockState(_context, this);
     }
 
-    public PlayerBaseState Falling()
+    public PlayerBaseState Glide()
     {
-        return new PlayerFallState(_context, this);
+        return new PlayerGlideState(_context, this);
     }
 }

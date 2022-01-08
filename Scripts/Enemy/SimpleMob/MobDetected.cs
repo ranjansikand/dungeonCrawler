@@ -1,8 +1,6 @@
 // Controls combat and post-detection behavior
 // SubStates: Attack, Chase
 
-using UnityEngine;
-
 public class MobDetected : MobBase
 {
     public MobDetected(MobMachine currentContext, MobFactory stateFactory)
@@ -13,14 +11,18 @@ public class MobDetected : MobBase
 
     public override void EnterState() {
         Ctx.Status.UpdateSprite(Ctx.Alarmed);
+        Ctx.PlayerMachine = Ctx.Target.GetComponent<PlayerStateMachine>();
     }
 
     public override void UpdateState() {
         CheckSwitchStates();
+
+        if (!Ctx.Agent.enabled && !Ctx.Dodging) Ctx.Agent.enabled = true;
     }
 
     public override void ExitState() {
         CloseSubState();
+        Ctx.PlayerMachine = null;
     }
 
     public override void CheckSwitchStates() {

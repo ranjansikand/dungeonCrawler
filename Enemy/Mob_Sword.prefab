@@ -7985,16 +7985,17 @@ MonoBehaviour:
   _weaponHitbox: {fileID: 8094908203298301259}
   _sightRange: 7
   _chaseRange: 10
-  _circleRange: 3
   _attackRange: 2
   _numberOfAttacks: 3
   _status: {fileID: 9169990953414590745}
   _confused: {fileID: 21300000, guid: f6f5faaece8aebd448233e1da997ed3b, type: 3}
   _alarmed: {fileID: 21300000, guid: a4eeb9c26c3c16e469eb5b1039512d80, type: 3}
+  _dead: {fileID: 21300000, guid: 41c6f94d80f9e034a9c63dcf97d30f5c, type: 3}
   _maxHealth: 4
   _hurtThreshold: 0
   _bloodSplatter: {fileID: 5103981700796912169}
   _hit: {fileID: 3875504136031246887}
+  _deathSlowMo: 0.15
 --- !u!114 &3094070285353106908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19776,7 +19777,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dmg: 1
-  _hitEffect: {fileID: 0}
 --- !u!1 &8217286209978898627
 GameObject:
   m_ObjectHideFlags: 0

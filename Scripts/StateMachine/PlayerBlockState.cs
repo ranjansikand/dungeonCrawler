@@ -1,4 +1,5 @@
 // Raises shield and protects player from damage
+using UnityEngine;
 
 public class PlayerBlockState : PlayerBaseState
 {
@@ -22,7 +23,7 @@ public class PlayerBlockState : PlayerBaseState
     public override void InitializeSubState() {}
 
     public override void CheckSwitchStates() {
-        if (!Ctx.IsBlockPressed || !Ctx.IsBlocking || Ctx.IsAttacking || Ctx.IsAttackPressed) {
+        if (!Ctx.IsBlockPressed || !Ctx.IsBlocking|| Ctx.IsAttacking || Ctx.IsAttackPressed) {
             SwitchState(Factory.Standard());
         }
     }
@@ -30,7 +31,7 @@ public class PlayerBlockState : PlayerBaseState
     void CheckBlock()
     {
         // Seperate attack and block
-        if (Ctx.IsAttackPressed || Ctx.IsAttacking) return; 
+        if (Ctx.IsAttackPressed || Ctx.IsAttacking) return;
 
         Ctx.IsBlocking = true;
         Ctx.OnBlockStarted.Invoke();

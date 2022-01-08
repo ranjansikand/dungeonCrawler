@@ -17,7 +17,8 @@ public class PlayerAttackState : PlayerBaseState
     }
 
     public override void EnterState() {
-        HandleAttack();
+        if (!Ctx.IsGrounded) SwitchState(Factory.AirAttack());
+        else HandleAttack();
     }
 
     public override void UpdateState() {
@@ -70,6 +71,7 @@ public class PlayerAttackState : PlayerBaseState
         // set variables
         Ctx.IsAttacking = true;
         Ctx.IsAttackPressed = false;
+
 
         // count attacks to transition to a specified animation
         Ctx.Animator.SetBool(Ctx.AttackingHash, true);
